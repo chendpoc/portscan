@@ -158,24 +158,36 @@ struct InspectorPanelView: View {
             let record = model.observed[id]
             section(title: "趋势（CPU / RSS）") {
                 if let record, record.samples.count > 1 {
-                    trendChart(
-                        title: "CPU %（整机口径）",
-                        points: record.samples.compactMap { sample in sample.cpu.map { ChartPoint(t: sample.t, v: $0) } },
-                        color: Theme.cpu,
-                        yMax: 100,
-                        yLabel: { "\(Int($0))%" },
-                        format: Format.percent,
-                        t0: record.t0,
-                    )
-                    trendChart(
-                        title: "内存 RSS",
-                        points: record.samples.compactMap { sample in sample.rss.map { ChartPoint(t: sample.t, v: Double($0)) } },
-                        color: Theme.mem,
-                        yMax: max(1, (record.samples.compactMap(\.rss).max().map(Double.init) ?? 1) * 1.2),
-                        yLabel: { Format.bytes(UInt64(max(0, $0))) },
-                        format: { Format.bytes(UInt64(max(0, $0))) },
-                        t0: record.t0,
-                    )
+                    let cpuPoints = record.samples.compactMap { sample in sample.cpu.map { ChartPoint(t: sample.t, v: $0) } }
+                    let rssPoints = record.samples.compactMap { sample in sample.rss.map { ChartPoint(t: sample.t, v: Double($0)) } }
+                    if cpuPoints.isEmpty, rssPoints.isEmpty {
+                        // 任务信息不可读（系统守护进程常见）：明示不可用，绝不显示伪造的 0 刻度轴
+                        StatusBadge(kind: .mut, label: "指标不可用")
+                        note("macOS 拒绝读取该进程的任务信息（通常见于系统守护进程）。CPU / RSS 不可用时不展示，而不是显示为 0。")
+                    } else {
+                        if !cpuPoints.isEmpty {
+                            trendChart(
+                                title: "CPU %（整机口径）",
+                                points: cpuPoints,
+                                color: Theme.cpu,
+                                yMax: 100,
+                                yLabel: { "\(Int($0))%" },
+                                format: Format.percent,
+                                t0: record.t0,
+                            )
+                        }
+                        if !rssPoints.isEmpty {
+                            trendChart(
+                                title: "内存 RSS",
+                                points: rssPoints,
+                                color: Theme.mem,
+                                yMax: max(1, (record.samples.compactMap(\.rss).max().map(Double.init) ?? 1) * 1.2),
+                                yLabel: { Format.bytes(UInt64(max(0, $0))) },
+                                format: { Format.bytes(UInt64(max(0, $0))) },
+                                t0: record.t0,
+                            )
+                        }
+                    }
 //                    note("观察起点 \(Format.time(record.t0)) —— \(model.selectedExited ? "进程已退出，以上为保留的最后记录。" : "")")
                 } else {
                     trendPlaceholder("CPU %（整机口径）")
@@ -241,7 +253,9 @@ struct InspectorPanelView: View {
                 yMin: 0,
                 yMax: yMax,
                 yLabel: yLabel,
-                tickSeconds: model.performance.tickInterval * 2,
+                // 观察样本跟随进程刷新间隔（1/2/5s 可调），断线阈值必须用真实采样节奏，
+                // 否则 5s 间隔时所有样本被判为缺口，折线全部消失
+                tickSeconds: TimeInterval(model.settings.intervalMs) / 1000,
                 height: 52,
                 mini: true,
             )

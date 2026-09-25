@@ -32,7 +32,7 @@ struct MetricChartView: View {
 
     @State private var hoverT: Date?
 
-    private var padL: CGFloat { mini ? 34 : 46 }
+    private var padL: CGFloat { mini ? 42 : 46 } // 迷你图 y 轴要放得下 "340 MB" 级标签
     private var padR: CGFloat { 10 }
     private var padT: CGFloat { mini ? 5 : 8 }
     private var padB: CGFloat { mini ? 13 : 18 }

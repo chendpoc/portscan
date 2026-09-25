@@ -28,6 +28,87 @@ final class RenderTests: XCTestCase {
         try png.write(to: URL(fileURLWithPath: "/tmp/portmaster-\(name).png"))
     }
 
+    /// Inspector 趋势图诊断：注入观察样本，验证 CPU/RSS 两张小图都绘制（RSS 曾不显示）。
+    @MainActor
+    func testRenderInspectorTrend() throws {
+        let model = MonitorViewModel()
+        let key = ProcessKey(pid: 4242, startSec: 1_700_000_000, startUsec: 1)
+        let entry = ProcessEntry(
+            key: key,
+            name: "diag-proc",
+            cpuPercent: 3.2,
+            cpuTimeSeconds: 12.3,
+            threadCount: 5,
+            rssBytes: 300 * 1024 * 1024,
+            status: .running,
+            parentPid: 1,
+            cwd: .available("/tmp"),
+            executable: .available("/usr/bin/diag"),
+            contextDisplay: nil,
+            contextKind: nil,
+        )
+        model.monitor.processes = ProcessSnapshot(generation: 1, capturedAt: Date(), entries: [entry])
+        let id = ProcessKeyFormatting.id(for: key)
+        let now = Date()
+        var samples: [ObservedSample] = []
+        for index in 0..<8 {
+            samples.append(ObservedSample(
+                t: now.addingTimeInterval(TimeInterval(-14 + index * 2)),
+                cpu: 2 + Double(index),
+                rss: UInt64(280 * 1024 * 1024 + index * 4 * 1024 * 1024),
+            ))
+        }
+        model.observed[id] = ObservedProcess(t0: now.addingTimeInterval(-14), samples: samples)
+        model.selectedKey = key
+        model.selectedSnapshot = entry
+
+        let view = InspectorPanelView(model: model, compact: false, onBack: {})
+            .frame(width: 300, height: 640)
+        let renderer = ImageRenderer(content: view)
+        renderer.scale = 2
+        guard let nsImage = renderer.nsImage,
+              let tiff = nsImage.tiffRepresentation,
+              let rep = NSBitmapImageRep(data: tiff),
+              let png = rep.representation(using: .png, properties: [:]) else {
+            XCTFail("render failed: inspector")
+            return
+        }
+        try png.write(to: URL(fileURLWithPath: "/tmp/inspector-trend.png"))
+    }
+
+    /// MetricChartView 直渲：RSS 量纲（字节）的迷你折线必须画出来（Inspector RSS 图曾无数据）。
+    @MainActor
+    func testRenderMiniRSSChart() throws {
+        let now = Date()
+        var points: [ChartPoint] = []
+        for index in 0..<8 {
+            let t = now.addingTimeInterval(TimeInterval(-14 + index * 2))
+            points.append(ChartPoint(t: t, v: Double(280 * 1024 * 1024 + index * 4 * 1024 * 1024)))
+        }
+        let series = [ChartSeries(color: Theme.mem, points: points, fill: false, width: 2)]
+        let chart = MetricChartView(
+            series: series,
+            window: now.addingTimeInterval(-14)...now,
+            yMin: 0,
+            yMax: 340 * 1024 * 1024,
+            yLabel: { Format.bytes(UInt64(max(0, $0))) },
+            tickSeconds: 2,
+            height: 52,
+            mini: true,
+        )
+        let view = chart.frame(width: 264)
+        let renderer = ImageRenderer(content: view)
+        renderer.scale = 2
+        guard let nsImage = renderer.nsImage,
+              let tiff = nsImage.tiffRepresentation,
+              let rep = NSBitmapImageRep(data: tiff),
+              let png = rep.representation(using: .png, properties: [:]) else {
+            XCTFail("render failed: mini-rss")
+            return
+        }
+        try png.write(to: URL(fileURLWithPath: "/tmp/mini-rss.png"))
+    }
+
     /// 吃豆人朝向定向：嘴（缺口）必须朝右对着豆子轨道。
     @MainActor
     func testRenderPacman() throws {
