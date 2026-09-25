@@ -64,6 +64,7 @@ struct MetricChartView: View {
             }
         }
         .frame(height: height)
+        .clipped() // 窗口边缘外的采样点不画出图表框
         .onGeometryChange(for: CGFloat.self, of: { $0.size.width }) { width in
             currentWidth = width
         }

@@ -1,8 +1,9 @@
 import SwiftUI
 
-/// Performance 页：CPU / 内存为第一阶段真实采样；磁盘 / 网络为后续阶段占位。
+/// Performance 页：CPU / 内存 / 网络为真实采样；磁盘为后续阶段占位。
 struct PerformanceView: View {
     @Bindable var model: MonitorViewModel
+    var compact = false
 
     var body: some View {
         VStack(spacing: 0) {
@@ -28,11 +29,13 @@ struct PerformanceView: View {
             case .disk:
                 PhaseTag(label: "后续阶段设计范围")
             case .cpu, .memory, .network:
-                Text(model.resource == .network ? "" : "第一阶段核心体验")
-                    .font(.system(size: 12))
-                    .foregroundStyle(Theme.text2)
-                    .lineLimit(1)
-                    .layoutPriority(-1) // 空间不足时优先截断说明文字，不压缩右侧控件
+                if !compact {
+                    Text(model.resource == .network ? "" : "第一阶段核心体验")
+                        .font(.system(size: 12))
+                        .foregroundStyle(Theme.text2)
+                        .lineLimit(1)
+                        .layoutPriority(-1) // 空间不足时优先截断说明文字，不压缩右侧控件
+                }
             }
             Spacer()
             let status = model.resourceStatus(model.resource)
@@ -94,9 +97,14 @@ struct PerformanceView: View {
             HStack(alignment: .firstTextBaseline, spacing: 10) {
                 Text(chartTitle)
                     .font(.system(size: 12.5, weight: .semibold))
-                Text(chartNote)
-                    .font(.system(size: 11))
-                    .foregroundStyle(Theme.text2)
+                    .lineLimit(1)
+                if !compact {
+                    Text(chartNote)
+                        .font(.system(size: 11))
+                        .foregroundStyle(Theme.text2)
+                        .lineLimit(1)
+                        .layoutPriority(-1)
+                }
                 Spacer()
                 legend
             }
@@ -321,23 +329,29 @@ struct PerformanceView: View {
         }
     }
 
+    /// 统计瓦片：标签 / 数值 / 注释三行结构固定（无注释时占位），
+    /// 等高拉伸 + 顶部对齐，保证一组瓦片高度与基线一致。
     private func statTile(_ label: String, _ value: String, sub: String? = nil) -> some View {
         VStack(alignment: .leading, spacing: 2) {
             Text(label)
                 .font(.system(size: 11))
                 .foregroundStyle(Theme.text2)
+                .lineLimit(1)
+                .frame(height: 16, alignment: .leading)
             Text(value)
                 .font(.system(size: 17, weight: .semibold))
                 .monospacedDigit()
-            if let sub {
-                Text(sub)
-                    .font(.system(size: 11))
-                    .foregroundStyle(Theme.text2)
-            }
+                .lineLimit(1)
+                .frame(height: 21, alignment: .leading)
+            Text(sub ?? " ")
+                .font(.system(size: 11))
+                .foregroundStyle(Theme.text2)
+                .lineLimit(1)
+                .frame(height: 16, alignment: .leading)
         }
         .padding(.horizontal, 11)
         .padding(.vertical, 8)
-        .frame(maxWidth: .infinity, alignment: .leading)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         .background(Theme.raised)
         .overlay(RoundedRectangle(cornerRadius: Theme.radiusM).strokeBorder(Theme.sep, lineWidth: 1))
         .clipShape(RoundedRectangle(cornerRadius: Theme.radiusM))
@@ -359,14 +373,20 @@ struct PerformanceView: View {
                 }
                 .font(.system(size: 11))
                 .foregroundStyle(Theme.text2)
-                StatusBadge(kind: badgeKind, label: label)
+                .frame(height: 16, alignment: .leading)
+                HStack {
+                    StatusBadge(kind: badgeKind, label: label)
+                }
+                .frame(height: 21, alignment: .leading)
                 Text("kern.memorystatus_level：可用 \(available)%")
                     .font(.system(size: 11))
                     .foregroundStyle(Theme.text2)
+                    .lineLimit(1)
+                    .frame(height: 16, alignment: .leading)
             }
             .padding(.horizontal, 11)
             .padding(.vertical, 8)
-            .frame(maxWidth: .infinity, alignment: .leading)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
             .background(Theme.raised)
             .overlay(RoundedRectangle(cornerRadius: Theme.radiusM).strokeBorder(Theme.sep, lineWidth: 1))
             .clipShape(RoundedRectangle(cornerRadius: Theme.radiusM))

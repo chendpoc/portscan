@@ -40,9 +40,12 @@ struct TitleBarView: View {
             .disabled(model.refreshing)
             .help("立即刷新进程与端口数据")
         }
-        .padding(.leading, 78) // 避开红绿灯按钮
+        // 红绿灯按钮 14×14，纵向中心固定在 y=16（系统决定，不随标题栏高度变化）。
+        // 内容带高 26、顶部留 3，使标题/按钮与红绿灯垂直对齐。
+        .padding(.leading, 78) // 避开红绿灯按钮（x: 9→69）
         .padding(.trailing, 12)
-        .frame(height: 44)
+        .padding(.top, 3)
+        .frame(height: 44, alignment: .top)
         .background(WindowDragView())
         .background(Theme.sidebar)
         .overlay(alignment: .bottom) { Theme.sep.frame(height: 1) }

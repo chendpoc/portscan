@@ -24,10 +24,13 @@ struct ContentView: View {
                         .background(Theme.err.opacity(0.08))
                 }
                 HStack(spacing: 0) {
+                    // 侧栏优先保全：主区空间不足时绝不动侧栏宽度
                     SidebarView(model: model, compact: compact)
+                        .layoutPriority(1)
                     if !(compact && inspectorOpen) {
-                        mainPage
+                        mainPage(compact: compact)
                             .frame(maxWidth: .infinity, maxHeight: .infinity)
+                            .clipped() // 主区过窄时裁剪溢出内容，不挤压侧栏
                     }
                     if inspectorOpen {
                         InspectorPanelView(model: model, compact: compact, onBack: model.closeInspector)
@@ -70,10 +73,10 @@ struct ContentView: View {
     }
 
     @ViewBuilder
-    private var mainPage: some View {
+    private func mainPage(compact: Bool) -> some View {
         switch model.page {
         case .performance:
-            PerformanceView(model: model)
+            PerformanceView(model: model, compact: compact)
         case .processes:
             ProcessTableView(model: model)
         case .ports:
