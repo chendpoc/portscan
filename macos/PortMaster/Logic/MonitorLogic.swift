@@ -73,6 +73,13 @@ enum MonitorLogic {
         descending: Bool,
     ) -> Bool {
         let sign: (ComparisonResult) -> ComparisonResult = { descending ? $0.reversed() : $0 }
+        if by == .name {
+            let order = a.name.localizedStandardCompare(b.name)
+            if order != .orderedSame {
+                return sign(order) == .orderedAscending
+            }
+            return a.key.pid < b.key.pid
+        }
         if by == .pid {
             return sign(a.key.pid.compare(b.key.pid)) == .orderedAscending
         }
@@ -85,6 +92,34 @@ enum MonitorLogic {
             return sign(a.key.pid.compare(b.key.pid)) == .orderedAscending
         }
         return sign(delta.compare(to: 0)) == .orderedAscending
+    }
+
+    /// 相邻样本间隔超过 1.5×采样周期视为时间缺口（暂停/恢复后断开折线，不回填）。
+    static func hasSamplingGap(previous: Date, current: Date, tickSeconds: TimeInterval) -> Bool {
+        current.timeIntervalSince(previous) > tickSeconds * 1.5
+    }
+
+    /// 去除完全相同的套接字行（SO_REUSEPORT 下同进程、同协议、同地址、同端口、
+    /// 同远端、同状态的重复绑定）；端口/地址/协议/进程/远端任一不同的条目保留。
+    static func dedupeSockets(_ sockets: [SocketEntry]) -> [SocketEntry] {
+        var seen: Set<String> = []
+        return sockets.filter { seen.insert($0.id).inserted }
+    }
+
+    /// 稳定量程：取 nice(峰值×1.15)，仅当新量程超出当前或收缩到 45% 以下时调整，
+    /// 避免吞吐图纵轴频繁跳动。
+    static func stableScale(current: Double?, maxValue: Double) -> Double {
+        func nice(_ value: Double) -> Double {
+            let power = pow(10, floor(log10(max(value, 1))))
+            for multiplier in [1.0, 2, 5, 10] where value <= multiplier * power {
+                return multiplier * power
+            }
+            return 10 * power
+        }
+        let want = nice(maxValue * 1.15)
+        guard let current, current > 0 else { return want }
+        if want > current || want < current * 0.45 { return want }
+        return current
     }
 
     static func listenerPortFilter(_ entry: SocketEntry) -> Bool {

@@ -24,12 +24,21 @@ enum ProcessDetailService {
             cwd: context.cwd,
             executable: context.executable,
             appBundle: appBundle,
+            userName: userName(pid: pid_t(key.pid)),
             collectedAt: Date(),
             verifiedAt: Date(),
             ancestry: ancestry.nodes,
             ancestryIncomplete: ancestry.incomplete,
             startTimeIso: startIso,
         )
+    }
+
+    private static func userName(pid: pid_t) -> String? {
+        var info = proc_bsdinfo()
+        let size = Int32(MemoryLayout<proc_bsdinfo>.size)
+        guard proc_pidinfo(pid, PROC_PIDTBSDINFO, 0, &info, size) == size else { return nil }
+        guard let pw = getpwuid(info.pbi_uid) else { return nil }
+        return String(cString: pw.pointee.pw_name)
     }
 
     private static func processArguments(pid: pid_t) -> [String]? {

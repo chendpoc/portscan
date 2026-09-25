@@ -39,10 +39,12 @@ final class MonitorService {
                 includeIPv6: settings.includeIpv6,
                 processes: known,
             )
+            // 渲染前去重：SO_REUSEPORT 下同进程同地址同端口的重复绑定合并为一行
+            let deduped = MonitorLogic.dedupeSockets(sockets)
             monitor.sockets = SocketSnapshot(
                 generation: currentGeneration,
                 capturedAt: Date(),
-                sockets: sockets.sorted { $0.localPort < $1.localPort },
+                sockets: deduped.sorted { $0.localPort < $1.localPort },
                 interfaces: [],
             )
             monitor.socketError = nil

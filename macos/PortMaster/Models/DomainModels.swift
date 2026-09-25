@@ -121,11 +121,16 @@ struct RefreshSettings: Equatable {
 }
 
 enum PrimaryView: String, CaseIterable {
-    case processes, ports
+    case performance, processes, ports
+}
+
+/// 侧栏系统资源卡片。磁盘与网络吞吐为后续阶段（PRD 明示为 non-goal）。
+enum ResourceKind: String, CaseIterable {
+    case cpu, memory, disk, network
 }
 
 enum ProcessSort: String, CaseIterable {
-    case cpu, memory, pid
+    case cpu, memory, pid, name
 }
 
 enum ProcessFilter: String, CaseIterable {
@@ -149,6 +154,7 @@ struct ProcessDetail: Equatable {
     var cwd: PathEvidence
     var executable: PathEvidence
     var appBundle: String?
+    var userName: String?
     var collectedAt: Date
     var verifiedAt: Date
     var ancestry: [AncestryNode]
