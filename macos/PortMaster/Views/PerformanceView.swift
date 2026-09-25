@@ -25,18 +25,18 @@ struct PerformanceView: View {
         HStack(spacing: 12) {
             Text(title)
                 .font(.system(size: 15, weight: .bold))
-            switch model.resource {
-            case .disk:
-                PhaseTag(label: "后续阶段设计范围")
-            case .cpu, .memory, .network:
-                if !compact {
-                    Text(model.resource == .network ? "" : "第一阶段核心体验")
-                        .font(.system(size: 12))
-                        .foregroundStyle(Theme.text2)
-                        .lineLimit(1)
-                        .layoutPriority(-1) // 空间不足时优先截断说明文字，不压缩右侧控件
-                }
-            }
+            // switch model.resource {
+            // case .disk:
+            //     PhaseTag(label: "后续阶段设计范围")
+            // case .cpu, .memory, .network:
+            //     if !compact {
+            //         Text(model.resource == .network ? "" : "第一阶段核心体验")
+            //             .font(.system(size: 12))
+            //             .foregroundStyle(Theme.text2)
+            //             .lineLimit(1)
+            //             .layoutPriority(-1) // 空间不足时优先截断说明文字，不压缩右侧控件
+            //     }
+            // }
             Spacer()
             let status = model.resourceStatus(model.resource)
             StatusBadge(kind: status.0, label: status.1)
@@ -134,13 +134,13 @@ struct PerformanceView: View {
                 Text(chartTitle)
                     .font(.system(size: 12.5, weight: .semibold))
                     .lineLimit(1)
-                if !compact {
-                    Text(chartNote)
-                        .font(.system(size: 11))
-                        .foregroundStyle(Theme.text2)
-                        .lineLimit(1)
-                        .layoutPriority(-1)
-                }
+                // if !compact {
+                //     Text(chartNote)
+                //         .font(.system(size: 11))
+                //         .foregroundStyle(Theme.text2)
+                //         .lineLimit(1)
+                //         .layoutPriority(-1)
+                // }
                 Spacer()
                 legend
             }
