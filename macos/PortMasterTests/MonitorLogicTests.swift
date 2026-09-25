@@ -88,6 +88,28 @@ final class MonitorLogicTests: XCTestCase {
         XCTAssertTrue(MonitorLogic.compareProcess(entry("node", 1), entry("node", 2), by: .name, descending: true))
     }
 
+    func testTimeSort() {
+        func entry(_ seconds: Double?, _ pid: UInt32) -> ProcessEntry {
+            ProcessEntry(
+                key: ProcessKey(pid: pid, startSec: 10, startUsec: 1),
+                name: "p\(pid)",
+                cpuPercent: nil,
+                cpuTimeSeconds: seconds,
+                rssBytes: nil,
+                status: .running,
+                parentPid: 1,
+                cwd: .unavailable("x"),
+                executable: .unavailable("x"),
+                contextDisplay: nil,
+                contextKind: nil,
+            )
+        }
+        XCTAssertTrue(MonitorLogic.compareProcess(entry(100, 1), entry(50, 2), by: .time, descending: true))
+        XCTAssertTrue(MonitorLogic.compareProcess(entry(50, 2), entry(100, 1), by: .time, descending: false))
+        // 无 TIME 读数的排在最后（降序时）
+        XCTAssertTrue(MonitorLogic.compareProcess(entry(50, 2), entry(nil, 3), by: .time, descending: true))
+    }
+
     func testSamplingGapDetection() {
         let t0 = Date()
         XCTAssertFalse(MonitorLogic.hasSamplingGap(previous: t0, current: t0.addingTimeInterval(1), tickSeconds: 1))

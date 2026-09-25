@@ -83,8 +83,16 @@ enum MonitorLogic {
         if by == .pid {
             return sign(a.key.pid.compare(b.key.pid)) == .orderedAscending
         }
-        let left: Double? = by == .cpu ? a.cpuPercent : a.rssBytes.map(Double.init)
-        let right: Double? = by == .cpu ? b.cpuPercent : b.rssBytes.map(Double.init)
+        let metric: (ProcessEntry) -> Double?
+        switch by {
+        case .cpu: metric = { $0.cpuPercent }
+        case .memory: metric = { $0.rssBytes.map(Double.init) }
+        case .time: metric = { $0.cpuTimeSeconds }
+        case .threads: metric = { $0.threadCount.map(Double.init) }
+        case .pid, .name: return false // 已在上面处理
+        }
+        let left = metric(a)
+        let right = metric(b)
         if left == nil, right != nil { return false }
         if left != nil, right == nil { return true }
         let delta = (left ?? 0) - (right ?? 0)

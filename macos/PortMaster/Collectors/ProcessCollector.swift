@@ -7,6 +7,17 @@ final class ProcessCollector {
         var system: UInt64
     }
 
+    /// sysctl KERN_PROC_ALL 的一行：身份字段全部可读（ps/top 同源），
+    /// 不依赖 proc_pidinfo(PROC_PIDTBSDINFO)——后者对部分进程返回失败，
+    /// 曾导致约 1/3 进程被静默丢弃。
+    private struct ProcRow {
+        var pid: pid_t
+        var key: ProcessKey
+        var comm: String
+        var status: Int32
+        var ppid: UInt32
+    }
+
     private var previousKeys: [UInt32: ProcessKey] = [:]
     private var previousCPU: [UInt32: CPUSample] = [:]
     private var lastSampleAt: Date?
@@ -23,37 +34,35 @@ final class ProcessCollector {
 
     func sample(generation: UInt64) -> Result<ProcessSnapshot, CollectorError> {
         let sampleReady = lastSampleAt.map { Date().timeIntervalSince($0) >= minimumInterval } ?? false
-        let pids: [pid_t]
-        switch listPIDs() {
-        case .success(let value): pids = value
-        case .failure(let error): return .failure(error)
-        }
+        let rows = listAllProcesses()
+        guard !rows.isEmpty else { return .failure(.process("Unable to list processes")) }
         var entries: [ProcessEntry] = []
+        entries.reserveCapacity(rows.count)
         var currentKeys: [UInt32: ProcessKey] = [:]
 
-        for pid in pids where pid > 0 {
-            guard let start = ProcessIdentity.processStart(pid: pid) else { continue }
-            let key = ProcessKey(pid: UInt32(pid), startSec: start.seconds, startUsec: start.microseconds)
-            let name = processName(pid: pid) ?? "pid-\(pid)"
-            let task = readTaskInfo(pid: pid)
-            let cpu = cpuPercent(pid: UInt32(pid), key: key, sample: task, sampleReady: sampleReady)
+        for row in rows {
+            let key = row.key
+            let name = processName(pid: row.pid) ?? row.comm
+            let task = readTaskInfo(pid: row.pid)
+            let cpu = cpuPercent(pid: UInt32(row.pid), key: key, sample: task, sampleReady: sampleReady)
             let context = ProcessContextReader.read(key: key)
-            let bsd = readBSDInfo(pid: pid)
             entries.append(
                 ProcessEntry(
                     key: key,
-                    name: name,
+                    name: name.isEmpty ? "pid-\(row.pid)" : name,
                     cpuPercent: cpu,
+                    cpuTimeSeconds: task.map { Double($0.user &+ $0.system) * tickToNanoseconds / 1_000_000_000 },
+                    threadCount: task?.threads,
                     rssBytes: task?.residentSize,
-                    status: mapStatus(bsd?.status),
-                    parentPid: bsd?.ppid,
+                    status: mapStatus(row.status),
+                    parentPid: row.ppid,
                     cwd: context.cwd,
                     executable: context.executable,
                     contextDisplay: context.contextDisplay,
                     contextKind: context.contextKind,
                 ),
             )
-            currentKeys[UInt32(pid)] = key
+            currentKeys[UInt32(row.pid)] = key
         }
 
         previousKeys = currentKeys
@@ -61,16 +70,46 @@ final class ProcessCollector {
         return .success(ProcessSnapshot(generation: generation, capturedAt: Date(), entries: entries))
     }
 
-    private func listPIDs() -> Result<[pid_t], CollectorError> {
-        var bufferSize = proc_listpids(UInt32(PROC_ALL_PIDS), UInt32(0), nil, Int32(0))
-        if bufferSize <= 0 { return .failure(.process("Unable to list processes")) }
-        let count = Int(bufferSize) / MemoryLayout<pid_t>.size
-        var pids = [pid_t](repeating: 0, count: count)
-        bufferSize = proc_listpids(UInt32(PROC_ALL_PIDS), UInt32(0), &pids, Int32(count * MemoryLayout<pid_t>.size))
-        if bufferSize <= 0 { return .failure(.process("Unable to list processes")) }
-        return .success(pids.filter { $0 > 0 })
+    /// 主枚举源：sysctl KERN_PROC_ALL（kinfo_proc）。
+    /// PID、启动时间（sec/usec）、状态、父进程、comm 名一次拿全。
+    private func listAllProcesses() -> [ProcRow] {
+        var mib: [Int32] = [CTL_KERN, KERN_PROC, KERN_PROC_ALL, 0]
+        var byteCount = 0
+        guard sysctl(&mib, 4, nil, &byteCount, nil, 0) == 0, byteCount > 0 else { return [] }
+        var procs = [kinfo_proc](repeating: kinfo_proc(), count: byteCount / MemoryLayout<kinfo_proc>.stride)
+        guard sysctl(&mib, 4, &procs, &byteCount, nil, 0) == 0 else { return [] }
+        let count = byteCount / MemoryLayout<kinfo_proc>.stride
+
+        var rows: [ProcRow] = []
+        rows.reserveCapacity(count)
+        for index in 0..<count {
+            let proc = procs[index]
+            let pid = proc.kp_proc.p_pid
+            guard pid > 0 else { continue }
+            let start = proc.kp_proc.p_starttime
+            let key = ProcessKey(
+                pid: UInt32(pid),
+                startSec: UInt64(bitPattern: Int64(start.tv_sec)),
+                startUsec: UInt64(bitPattern: Int64(start.tv_usec)),
+            )
+            let comm = withUnsafeBytes(of: proc.kp_proc.p_comm) { raw -> String in
+                guard let base = raw.baseAddress else { return "" }
+                return String(validatingUTF8: base.assumingMemoryBound(to: CChar.self)) ?? ""
+            }
+            rows.append(
+                ProcRow(
+                    pid: pid,
+                    key: key,
+                    comm: comm,
+                    status: Int32(proc.kp_proc.p_stat),
+                    ppid: UInt32(bitPattern: proc.kp_eproc.e_ppid),
+                ),
+            )
+        }
+        return rows
     }
 
+    /// proc_name 可返回比 p_comm（16 字符截断）更完整的名字；失败时用 comm 兜底。
     private func processName(pid: pid_t) -> String? {
         var buffer = [CChar](repeating: 0, count: 1024)
         let result = proc_name(pid, &buffer, UInt32(buffer.count))
@@ -78,24 +117,14 @@ final class ProcessCollector {
         return String(validatingUTF8: buffer)
     }
 
-    private struct BSDInfo {
-        var status: Int32
-        var ppid: UInt32?
-    }
-
-    private func readBSDInfo(pid: pid_t) -> BSDInfo? {
-        var info = proc_bsdinfo()
-        let size = Int32(MemoryLayout<proc_bsdinfo>.size)
-        guard proc_pidinfo(pid, PROC_PIDTBSDINFO, 0, &info, size) == size else { return nil }
-        return BSDInfo(status: Int32(info.pbi_status), ppid: UInt32(info.pbi_ppid))
-    }
-
     private struct TaskInfo {
         var residentSize: UInt64
         var user: UInt64
         var system: UInt64
+        var threads: UInt32
     }
 
+    /// CPU/RSS/线程数对其他用户的进程可能不可读——返回 nil，UI 显示「采样…」而非伪造。
     private func readTaskInfo(pid: pid_t) -> TaskInfo? {
         var info = proc_taskinfo()
         let size = Int32(MemoryLayout<proc_taskinfo>.size)
@@ -104,6 +133,7 @@ final class ProcessCollector {
             residentSize: info.pti_resident_size,
             user: info.pti_total_user,
             system: info.pti_total_system,
+            threads: UInt32(clamping: info.pti_threadnum),
         )
     }
 
@@ -128,8 +158,7 @@ final class ProcessCollector {
         return max(0, percent)
     }
 
-    private func mapStatus(_ raw: Int32?) -> ProcessStateKind {
-        guard let raw else { return .unknown }
+    private func mapStatus(_ raw: Int32) -> ProcessStateKind {
         switch raw {
         case SIDL, SSTOP: return .stopped
         case SZOMB: return .zombie

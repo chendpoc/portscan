@@ -12,25 +12,38 @@ final class SystemMetricsCollector {
     }
 
     private var previousTicks: [CoreTicks]?
+    private var previousSwap: (ins: UInt64, outs: UInt64, capturedAt: Date)?
 
     func sample() -> SystemMetricsSample {
         let cpu = cpuLoad()
         let memory = memoryStats()
+        let load = loadAverage()
+        let swap = swapRates(ins: memory.swapIns, outs: memory.swapOuts)
         return SystemMetricsSample(
             capturedAt: Date(),
             cpuTotal: cpu.total,
+            cpuUser: cpu.user,
+            cpuSystem: cpu.system,
             cpuPerCore: cpu.perCore,
             coreCount: ProcessInfo.processInfo.processorCount,
+            load1: load.0,
+            load5: load.1,
+            load15: load.2,
             memoryUsed: memory.used,
+            memoryActive: memory.active,
+            memoryWired: memory.wired,
+            memoryCompressed: memory.compressed,
             memoryTotal: memory.total,
             swapUsed: memory.swap,
+            swapInRate: swap.ins,
+            swapOutRate: swap.outs,
             memoryAvailablePercent: pressureAvailablePercent(),
         )
     }
 
     // MARK: - CPU
 
-    private func cpuLoad() -> (total: Double?, perCore: [Double]) {
+    private func cpuLoad() -> (total: Double?, user: Double?, system: Double?, perCore: [Double]) {
         var cpuInfo: processor_info_array_t?
         var infoCount = mach_msg_type_number_t(0)
         var processorCount = natural_t(0)
@@ -41,7 +54,7 @@ final class SystemMetricsCollector {
             &cpuInfo,
             &infoCount,
         )
-        guard result == KERN_SUCCESS, let cpuInfo else { return (nil, []) }
+        guard result == KERN_SUCCESS, let cpuInfo else { return (nil, nil, nil, []) }
         defer {
             let size = vm_size_t(infoCount) * vm_size_t(MemoryLayout<integer_t>.stride)
             vm_deallocate(mach_task_self_, vm_address_t(bitPattern: cpuInfo), size)
@@ -64,7 +77,7 @@ final class SystemMetricsCollector {
 
         guard let previous = previousTicks, previous.count == current.count else {
             previousTicks = current
-            return (nil, [])
+            return (nil, nil, nil, [])
         }
         previousTicks = current
 
@@ -72,6 +85,8 @@ final class SystemMetricsCollector {
         perCore.reserveCapacity(current.count)
         var usedSum = 0.0
         var totalSum = 0.0
+        var userSum = 0.0
+        var systemSum = 0.0
         for (now, before) in zip(current, previous) {
             let dUser = Double(now.user &- before.user)
             let dSystem = Double(now.system &- before.system)
@@ -82,14 +97,32 @@ final class SystemMetricsCollector {
             perCore.append(total > 0 ? min(100, max(0, used / total * 100)) : 0)
             usedSum += used
             totalSum += total
+            userSum += dUser + dNice // nice 计入用户态（top 口径）
+            systemSum += dSystem
         }
-        let total = totalSum > 0 ? min(100, max(0, usedSum / totalSum * 100)) : nil
-        return (total, perCore)
+        guard totalSum > 0 else { return (nil, nil, nil, perCore) }
+        return (
+            min(100, max(0, usedSum / totalSum * 100)),
+            userSum / totalSum * 100,
+            systemSum / totalSum * 100,
+            perCore,
+        )
+    }
+
+    /// Load Average（1 / 5 / 15 分钟），对应 top 的 Load Avg。
+    private func loadAverage() -> (Double, Double, Double) {
+        var loads = [Double](repeating: 0, count: 3)
+        guard getloadavg(&loads, 3) == 3 else { return (0, 0, 0) }
+        return (loads[0], loads[1], loads[2])
     }
 
     // MARK: - 内存
 
-    private func memoryStats() -> (used: UInt64, total: UInt64, swap: UInt64) {
+    private func memoryStats() -> (
+        used: UInt64, total: UInt64, swap: UInt64,
+        active: UInt64, wired: UInt64, compressed: UInt64,
+        swapIns: UInt64, swapOuts: UInt64,
+    ) {
         let total = ProcessInfo.processInfo.physicalMemory
         var stats = vm_statistics64()
         var count = mach_msg_type_number_t(MemoryLayout<vm_statistics64>.size / MemoryLayout<integer_t>.size)
@@ -98,11 +131,16 @@ final class SystemMetricsCollector {
                 host_statistics64(mach_host_self(), HOST_VM_INFO64, rebound, &count)
             }
         }
-        guard result == KERN_SUCCESS else { return (0, total, swapUsed()) }
+        guard result == KERN_SUCCESS else { return (0, total, swapUsed(), 0, 0, 0, 0, 0) }
         let pageSize = UInt64(vm_kernel_page_size)
-        let usedPages = UInt64(stats.active_count) + UInt64(stats.wire_count) + UInt64(stats.compressor_page_count)
-        let used = min(usedPages * pageSize, total)
-        return (used, total, swapUsed())
+        let active = UInt64(stats.active_count) * pageSize
+        let wired = UInt64(stats.wire_count) * pageSize
+        let compressed = UInt64(stats.compressor_page_count) * pageSize
+        let used = min(active + wired + compressed, total)
+        return (
+            used, total, swapUsed(), active, wired, compressed,
+            UInt64(stats.swapins), UInt64(stats.swapouts),
+        )
     }
 
     private func swapUsed() -> UInt64 {
@@ -111,6 +149,19 @@ final class SystemMetricsCollector {
         var mib: [Int32] = [CTL_VM, VM_SWAPUSAGE]
         guard sysctl(&mib, 2, &usage, &size, nil, 0) == 0 else { return 0 }
         return usage.xsu_used
+    }
+
+    /// 换入/换出速率（次/秒）。top 括号里的当前间隔值同款口径；首个样本无前值返回 nil。
+    private func swapRates(ins: UInt64, outs: UInt64) -> (ins: Double?, outs: Double?) {
+        let now = Date()
+        defer { previousSwap = (ins, outs, now) }
+        guard let before = previousSwap else { return (nil, nil) }
+        let elapsed = now.timeIntervalSince(before.capturedAt)
+        guard elapsed > 0 else { return (nil, nil) }
+        return (
+            Double(ins &- before.ins) / elapsed,
+            Double(outs &- before.outs) / elapsed,
+        )
     }
 
     /// kern.memorystatus_level：可用内存百分比。读取失败（权限）时返回 nil，UI 省略该字段。

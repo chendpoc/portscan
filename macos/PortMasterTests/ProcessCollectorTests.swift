@@ -62,6 +62,30 @@ final class ProcessCollectorTests: XCTestCase {
         let usec = Double(ru.ru_utime.tv_usec + ru.ru_stime.tv_usec)
         return sec + usec / 1_000_000
     }
+
+    /// 清单完整性：sysctl KERN_PROC_ALL 枚举应覆盖 proc_listpids 的几乎全部进程。
+    /// 回归防护：曾用 proc_pidinfo 作枚举源，210/584（36%）进程被静默丢弃。
+    func testInventoryCompleteness() throws {
+        let collector = ProcessCollector()
+        guard case .success(let snapshot) = collector.sample(generation: 1) else {
+            XCTFail("采样失败")
+            return
+        }
+        var byteSize = proc_listpids(UInt32(PROC_ALL_PIDS), 0, nil, 0)
+        let capacity = Int(byteSize) / MemoryLayout<pid_t>.size
+        var pids = [pid_t](repeating: 0, count: capacity)
+        byteSize = proc_listpids(UInt32(PROC_ALL_PIDS), 0, &pids, Int32(capacity * MemoryLayout<pid_t>.size))
+        let expected = pids.filter { $0 > 0 }.count
+        // 允许进程进出抖动，但覆盖率不得低于 90%
+        XCTAssertGreaterThan(
+            Double(snapshot.entries.count),
+            Double(expected) * 0.9,
+            "清单覆盖不足：\(snapshot.entries.count) / \(expected)",
+        )
+        // 自身进程的线程数应可读（#TH 列数据源）
+        let selfEntry = snapshot.entries.first { $0.key.pid == UInt32(getpid()) }
+        XCTAssertGreaterThan(selfEntry?.threadCount ?? 0, 0, "线程数不可读")
+    }
 }
 
 private final class LockedFlag {

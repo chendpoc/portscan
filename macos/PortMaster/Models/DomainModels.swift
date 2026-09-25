@@ -50,6 +50,10 @@ struct ProcessEntry: Identifiable, Equatable {
     var key: ProcessKey
     var name: String
     var cpuPercent: Double?
+    /// 累计 CPU 时间（秒，用户态+系统态），对应 top 的 TIME 列。
+    var cpuTimeSeconds: Double? = nil
+    /// 线程总数（对应 top 的 #TH 列）。
+    var threadCount: UInt32? = nil
     var rssBytes: UInt64?
     var status: ProcessStateKind
     var parentPid: UInt32?
@@ -130,7 +134,7 @@ enum ResourceKind: String, CaseIterable {
 }
 
 enum ProcessSort: String, CaseIterable {
-    case cpu, memory, pid, name
+    case cpu, memory, pid, name, time, threads
 }
 
 enum ProcessFilter: String, CaseIterable {
