@@ -6,6 +6,10 @@ final class MonitorService {
     private var monitor = MonitorState()
     private var settings = RefreshSettings()
 
+    /// 首轮采集的阶段进度回调（仅 generation 1 触发）：
+    /// 进程清单完成 0.6 → 端口扫描完成 1.0。供启动进度条展示真实进度，不伪造。
+    var onBootPhase: (@Sendable (Double) -> Void)?
+
     func snapshot() -> MonitorState { monitor }
     func currentSettings() -> RefreshSettings { settings }
 
@@ -27,6 +31,7 @@ final class MonitorService {
             monitor.processes = snapshot
             monitor.processError = nil
             monitor.processErrorGeneration = nil
+            if currentGeneration == 1 { onBootPhase?(0.6) }
         case .failure(let error):
             monitor.processError = error.localizedDescription
             monitor.processErrorGeneration = currentGeneration
@@ -49,6 +54,7 @@ final class MonitorService {
             )
             monitor.socketError = nil
             monitor.socketErrorGeneration = nil
+            if currentGeneration == 1 { onBootPhase?(1.0) }
         } catch {
             monitor.socketError = error.localizedDescription
             monitor.socketErrorGeneration = currentGeneration

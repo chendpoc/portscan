@@ -25,24 +25,24 @@ struct TitleBarView: View {
             Text("PortMaster")
                 .font(.system(size: 13, weight: .semibold))
             Spacer()
-            SearchField(placeholder: "端口搜索 ⌘K", text: portQuery, width: 160, focus: searchFocus)
+//            SearchField(placeholder: "端口搜索 ⌘K", text: portQuery, width: 160, focus: searchFocus)
             Button {
                 var settings = model.settings
                 settings.paused.toggle()
                 model.updateSettings(settings)
             } label: {
-                HStack(spacing: 6) {
-                    StatusDot(kind: model.settings.paused ? .warn : .ok)
-                    Text(model.settings.paused ? "恢复" : "暂停")
-                }
+                // 图标即状态：运行中显示暂停键（原色），已暂停显示播放键（警示色）
+                Image(systemName: model.settings.paused ? "play.fill" : "pause.fill")
+                    .foregroundStyle(model.settings.paused ? Theme.warn : Color.primary)
             }
             .buttonStyle(TitleBarButtonStyle())
-            .help("暂停后停止新增采样，保留已有图表与表格；恢复后保留时间缺口")
+            .help(model.settings.paused ? "恢复采样（保留时间缺口，不回填）" : "暂停采样（保留已有图表与表格）")
 
             Button {
                 theme = theme == "dark" ? "light" : "dark"
-            } label: {
-                Label("主题", systemImage: "circle.lefthalf.filled")
+            }
+            label: {
+                Image(systemName: "circle.lefthalf.filled")
             }
             .buttonStyle(TitleBarButtonStyle())
             .help("切换浅色 / 深色主题")

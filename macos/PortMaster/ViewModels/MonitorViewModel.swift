@@ -36,6 +36,9 @@ final class MonitorViewModel {
     var refreshing = false
     var toast: ToastItem?
 
+    /// 首轮采集真实进度（0.1 起步 → 进程清单 0.6 → 端口 1.0），供品牌页进度条。
+    var bootProgress: Double = 0.1
+
     private let service = MonitorService()
     private var loopTask: Task<Void, Never>?
     private var detailTask: Task<Void, Never>?
@@ -46,6 +49,12 @@ final class MonitorViewModel {
 
     func start() {
         settings = service.currentSettings()
+        service.onBootPhase = { [weak self] value in
+            Task { @MainActor in
+                guard let self else { return }
+                self.bootProgress = max(self.bootProgress, value)
+            }
+        }
         refreshNow()
         loopTask?.cancel()
         loopTask = Task { [weak self] in

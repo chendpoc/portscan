@@ -61,9 +61,12 @@ struct PortsTableView: View {
         .animation(.easeOut(duration: 0.2), value: isInitialLoading)
     }
 
-    /// 从未成功加载且未报错 → 仍在首轮采集中。
+    /// 从未成功加载且未报错 → 仍在首轮采集中（三态判定见 MonitorLogic）。
     private var isInitialLoading: Bool {
-        model.monitor.sockets == nil && model.monitor.socketError == nil
+        MonitorLogic.isInitialLoading(
+            snapshotLoaded: model.monitor.sockets != nil,
+            error: model.monitor.socketError,
+        )
     }
 
     private var headerRow: some View {

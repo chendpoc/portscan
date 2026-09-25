@@ -122,7 +122,7 @@ struct PerformanceView: View {
         if model.performance.resource == .disk, let capacity = model.performance.diskCapacity {
             VStack(alignment: .leading, spacing: 8) {
                 HStack(alignment: .firstTextBaseline) {
-                    Text("容量（独立于吞吐）")
+                    Text("容量")
                         .font(.system(size: 12.5, weight: .semibold))
                     Spacer()
                     Text("Macintosh HD (/)")
@@ -150,7 +150,7 @@ struct PerformanceView: View {
                 }
                 .frame(height: 6)
                 .clipShape(Capsule())
-                Text("容量与读写吞吐为不同指标，分别展示。可用空间含可清除内容（与 Finder 口径一致）。")
+                Text("可用空间含可清除内容（与 Finder 口径一致）。")
                     .font(.system(size: 11))
                     .foregroundStyle(Theme.text3)
             }
@@ -176,7 +176,7 @@ struct PerformanceView: View {
                 HStack(alignment: .firstTextBaseline) {
                     Text("内存构成")
                         .font(.system(size: 12.5, weight: .semibold))
-                    Text("构成口径：应用 + 联动 + 已压缩 = 已使用；其余为未占用（含可回收）")
+                    Text("组成：应用 + 联动 + 已压缩 = 已使用；其余为未占用（含可回收）")
                         .font(.system(size: 11))
                         .foregroundStyle(Theme.text2)
                 }
@@ -287,7 +287,7 @@ struct PerformanceView: View {
                 : "整机 CPU 使用率"
         case .memory: return "内存使用"
         case .network: return "收发速率 · \(model.performance.interfaceDisplayName(model.performance.selectedInterface))"
-        case .disk: return "读写吞吐 · 整机"
+        case .disk: return "读写"
         }
     }
 
@@ -295,8 +295,8 @@ struct PerformanceView: View {
         switch model.performance.resource {
         case .cpu: "纵轴固定 0–100%（整机口径）"
         case .memory: "以物理总量为参照；已使用 = 活动 + 联动 + 压缩"
-        case .network: "收发速率（纵轴自适应、带迟滞）；不依据连接数或端口数推算"
-        case .disk: "读写吞吐（纵轴自适应、带迟滞，IOKit 块存储计数）；容量见下方独立区块"
+        case .network: "收发速率："
+        case .disk: "读写"
         }
     }
 

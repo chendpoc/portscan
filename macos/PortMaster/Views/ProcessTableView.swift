@@ -49,9 +49,12 @@ struct ProcessTableView: View {
         .animation(.easeOut(duration: 0.2), value: isInitialLoading)
     }
 
-    /// 从未成功加载且未报错 → 仍在首轮采集中。
+    /// 从未成功加载且未报错 → 仍在首轮采集中（三态判定见 MonitorLogic）。
     private var isInitialLoading: Bool {
-        model.monitor.processes == nil && model.monitor.processError == nil
+        MonitorLogic.isInitialLoading(
+            snapshotLoaded: model.monitor.processes != nil,
+            error: model.monitor.processError,
+        )
     }
 
     // MARK: - 表头

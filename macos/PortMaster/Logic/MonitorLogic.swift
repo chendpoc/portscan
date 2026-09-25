@@ -114,6 +114,12 @@ enum MonitorLogic {
         return sockets.filter { seen.insert($0.id).inserted }
     }
 
+    /// 首轮加载中 ⇔ 从未成功加载且未报错。
+    /// 回归防护：曾把「数据还没到」误显示为「没有匹配」空态——三态必须区分。
+    static func isInitialLoading(snapshotLoaded: Bool, error: String?) -> Bool {
+        !snapshotLoaded && error == nil
+    }
+
     /// 稳定量程：取 nice(峰值×1.15)，仅当新量程超出当前或收缩到 45% 以下时调整，
     /// 避免吞吐图纵轴频繁跳动。
     static func stableScale(current: Double?, maxValue: Double) -> Double {
