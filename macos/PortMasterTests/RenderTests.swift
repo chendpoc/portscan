@@ -15,7 +15,7 @@ final class RenderTests: XCTestCase {
         try await Task.sleep(nanoseconds: 3_000_000_000)
         model.page = page
         model.performance.resource = resource
-        let view = ContentView(model: model).frame(width: width, height: height)
+        let view = ContentView(model: model, showsBrandLaunch: false).frame(width: width, height: height)
         let renderer = ImageRenderer(content: view)
         renderer.scale = 2
         guard let nsImage = renderer.nsImage,

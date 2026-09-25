@@ -87,6 +87,54 @@ struct EmptyStateView: View {
     }
 }
 
+/// 首次加载骨架屏：预览表格结构（感知速度）+ 轻脉冲（活性信号）。
+/// 脉冲为循环动画：仅在加载期间短暂出现；reduced-motion 下静态呈现。
+struct SkeletonTableView: View {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @State private var pulse = false
+
+    var body: some View {
+        VStack(spacing: 0) {
+            ForEach(0..<9, id: \.self) { SkeletonRow(seed: $0) }
+            Spacer(minLength: 0)
+        }
+        .opacity(reduceMotion ? 0.5 : (pulse ? 0.85 : 0.45))
+        .onAppear {
+            guard !reduceMotion else { return }
+            withAnimation(.easeInOut(duration: 1.1).repeatForever(autoreverses: true)) {
+                pulse = true
+            }
+        }
+    }
+}
+
+private struct SkeletonRow: View {
+    let seed: Int
+
+    /// 伪随机但确定的宽度（按行号取模），避免每次重渲染闪烁。
+    private var nameWidth: CGFloat { [120, 88, 148, 106, 96, 132][seed % 6] }
+
+    var body: some View {
+        HStack(spacing: 0) {
+            bar(nameWidth).frame(maxWidth: .infinity, alignment: .leading)
+            bar(34).frame(width: 64, alignment: .leading)
+            bar(42).frame(width: 76, alignment: .leading)
+            bar(48).frame(width: 84, alignment: .leading)
+            bar(28).frame(width: 56, alignment: .leading)
+            bar(52).frame(width: 90, alignment: .leading)
+            bar(130).frame(maxWidth: .infinity, alignment: .leading)
+        }
+        .padding(.horizontal, 12)
+        .padding(.vertical, 8)
+    }
+
+    private func bar(_ width: CGFloat) -> some View {
+        RoundedRectangle(cornerRadius: 3)
+            .fill(Color.primary.opacity(0.10))
+            .frame(width: width, height: 10)
+    }
+}
+
 /// 页头（标题 + 计数 + 搜索框）。
 struct PageHeadView<Extra: View>: View {
     let title: String

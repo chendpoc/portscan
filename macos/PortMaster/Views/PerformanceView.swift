@@ -238,9 +238,12 @@ struct PerformanceView: View {
             if waitingForFirstSample {
                 ZStack {
                     Theme.inset
-                    Text("正在采集首个样本，请稍候…")
-                        .font(.system(size: 12.5))
-                        .foregroundStyle(Theme.text3)
+                    HStack(spacing: 6) {
+                        ProgressView().controlSize(.small)
+                        Text("正在采集首个样本，请稍候…")
+                            .font(.system(size: 12.5))
+                            .foregroundStyle(Theme.text3)
+                    }
                 }
                 .frame(height: 220)
                 .clipShape(RoundedRectangle(cornerRadius: Theme.radiusS))

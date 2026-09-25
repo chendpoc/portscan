@@ -26,11 +26,15 @@ struct PortsTableView: View {
             if model.ports.portScope != nil {
                 scopeBanner
             }
-            if visible.isEmpty {
+            if isInitialLoading {
+                SkeletonTableView()
+                    .transition(.opacity)
+            } else if visible.isEmpty {
                 EmptyStateView(
                     title: "没有匹配的端口",
                     hint: "尝试更换关键词。可搜索端口号、进程名称或本地地址。",
                 )
+                .transition(.opacity)
             } else {
                 ScrollView {
                     LazyVStack(spacing: 0, pinnedViews: [.sectionHeaders]) {
@@ -54,6 +58,12 @@ struct PortsTableView: View {
                 ? "仅展示监听（LISTEN）状态的本地端口 · 完全相同的绑定合并显示"
                 : "展示全部套接字（含已建立连接） · 完全相同的绑定合并显示"])
         }
+        .animation(.easeOut(duration: 0.2), value: isInitialLoading)
+    }
+
+    /// 从未成功加载且未报错 → 仍在首轮采集中。
+    private var isInitialLoading: Bool {
+        model.monitor.sockets == nil && model.monitor.socketError == nil
     }
 
     private var headerRow: some View {

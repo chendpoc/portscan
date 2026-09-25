@@ -23,11 +23,16 @@ struct ProcessTableView: View {
                 query: $model.query,
                 extra: { filterPicker },
             )
-            if visible.isEmpty {
+            if isInitialLoading {
+                // 首次加载：骨架屏预览结构，不闪「没有匹配」空态
+                SkeletonTableView()
+                    .transition(.opacity)
+            } else if visible.isEmpty {
                 EmptyStateView(
                     title: "没有匹配的进程",
                     hint: "尝试更换关键词。可搜索进程名称、PID、可执行路径或本地端口号。",
                 )
+                .transition(.opacity)
             } else {
                 ScrollView {
                     LazyVStack(spacing: 0, pinnedViews: [.sectionHeaders]) {
@@ -38,8 +43,15 @@ struct ProcessTableView: View {
                         }
                     }
                 }
+                .transition(.opacity)
             }
         }
+        .animation(.easeOut(duration: 0.2), value: isInitialLoading)
+    }
+
+    /// 从未成功加载且未报错 → 仍在首轮采集中。
+    private var isInitialLoading: Bool {
+        model.monitor.processes == nil && model.monitor.processError == nil
     }
 
     // MARK: - 表头
