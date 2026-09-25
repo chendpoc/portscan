@@ -65,7 +65,7 @@ final class ProcessCollectorTests: XCTestCase {
 }
 
 private final class LockedFlag {
-    private var storage = false
+    private var storage = true // 忙线程自旋条件：初始必须为 true
     private let lock = NSLock()
 
     var value: Bool {

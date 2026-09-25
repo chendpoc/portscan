@@ -108,12 +108,10 @@ final class ProcessCollector {
     }
 
     private func cpuPercent(pid: UInt32, key: ProcessKey, sample: TaskInfo?, sampleReady: Bool) -> Double? {
-        guard sampleReady, let sample else { return nil }
-        guard previousKeys[pid] == key else {
-            previousCPU[pid] = CPUSample(user: sample.user, system: sample.system)
-            return nil
-        }
-        guard let previous = previousCPU[pid] else {
+        guard let sample else { return nil }
+        // 基线存储不受 sampleReady 门控：首个样本也存基线，
+        // 否则要第三次采样才有值；仅计算时要求间隔 ≥ minimumInterval。
+        guard sampleReady, previousKeys[pid] == key, let previous = previousCPU[pid] else {
             previousCPU[pid] = CPUSample(user: sample.user, system: sample.system)
             return nil
         }
