@@ -42,7 +42,6 @@ struct ContentView: View {
                 .animation(.easeOut(duration: 0.2), value: inspectorOpen)
                 StatusFooterView(model: model)
             }
-            .frame(minWidth: 700, minHeight: 480)
             .background(Theme.content)
             .overlay(alignment: .bottom) {
                 if let toast = model.toast {
@@ -59,6 +58,9 @@ struct ContentView: View {
             .onChange(of: theme) { _, _ in applyAppearance() }
             .onDisappear { model.stop() }
         }
+        // 最小尺寸必须加在 GeometryReader 外层才会传导为窗口最小尺寸
+        //（GeometryReader 贪婪填充，不传导子视图约束）。与原型一致：700×480。
+        .frame(minWidth: 700, minHeight: 480)
         .ignoresSafeArea(.container, edges: .top)
         .preferredColorScheme(colorScheme)
     }

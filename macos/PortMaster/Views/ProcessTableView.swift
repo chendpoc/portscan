@@ -33,10 +33,6 @@ struct ProcessTableView: View {
                     }
                 }
             }
-            TableFootNote(items: [
-                "CPU % ＝ 占整机总算力的百分比（全机合计 100%，不区分单核）",
-                "内存 ＝ RSS（常驻内存），各进程 RSS 之和不等于系统已用内存",
-            ])
         }
     }
 

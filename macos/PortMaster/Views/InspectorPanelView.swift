@@ -101,9 +101,9 @@ struct InspectorPanelView: View {
                 kvRow("PID") {
                     HStack(spacing: 6) {
                         Text(verbatim: "\(key.pid)").monospacedDigit()
-                        Text("实例键：PID+启动时间")
-                            .font(.system(size: 11))
-                            .foregroundStyle(Theme.text3)
+//                        Text("实例键：PID+启动时间")
+//                            .font(.system(size: 11))
+//                            .foregroundStyle(Theme.text3)
                     }
                 }
                 kvRow("启动时间") {
@@ -176,12 +176,43 @@ struct InspectorPanelView: View {
                         format: { Format.bytes(UInt64(max(0, $0))) },
                         t0: record.t0,
                     )
-                    note("观察起点 \(Format.time(record.t0)) —— 进程历史从开始观察时记录，选中之前的历史不存在、也不伪造。\(model.selectedExited ? "进程已退出，以上为保留的最后记录。" : "")")
+//                    note("观察起点 \(Format.time(record.t0)) —— \(model.selectedExited ? "进程已退出，以上为保留的最后记录。" : "")")
                 } else {
-                    note("已开始观察该进程，正在积累首个样本…（观察起点 \(record.map { Format.time($0.t0) } ?? Format.time(Date()))）")
+                    trendPlaceholder("CPU %（整机口径）")
+                    trendPlaceholder("内存 RSS")
                 }
             }
         }
+    }
+
+    /// 首个样本积累期的占位图框：与正式图框同结构同尺寸，图表出现后布局不跳动。
+    private func trendPlaceholder(_ title: String) -> some View {
+        VStack(alignment: .leading, spacing: 4) {
+            HStack {
+                Text(title)
+                    .font(.system(size: 11.5))
+                    .foregroundStyle(Theme.text2)
+                Spacer()
+                Text("—")
+                    .font(.system(size: 11.5))
+                    .monospacedDigit()
+            }
+            ZStack {
+                Theme.inset
+                HStack(spacing: 6) {
+                    ProgressView().controlSize(.mini)
+                    Text("正在采集首个样本…")
+                        .font(.system(size: 11))
+                        .foregroundStyle(Theme.text3)
+                }
+            }
+            .frame(height: 52)
+            .clipShape(RoundedRectangle(cornerRadius: Theme.radiusS))
+        }
+        .padding(8)
+        .background(Theme.raised)
+        .overlay(RoundedRectangle(cornerRadius: Theme.radiusM).strokeBorder(Theme.sep, lineWidth: 1))
+        .clipShape(RoundedRectangle(cornerRadius: Theme.radiusM))
     }
 
     private func trendChart(
@@ -204,7 +235,8 @@ struct InspectorPanelView: View {
                     .monospacedDigit()
             }
             MetricChartView(
-                series: [ChartSeries(color: color, points: points, fill: true, format: format)],
+                // 迷你趋势图用纯折线：52px 高度下填充会糊成色块，描边更清晰
+                series: [ChartSeries(color: color, points: points, fill: false, width: 2, format: format)],
                 window: t0...max(t0, model.now),
                 yMin: 0,
                 yMax: yMax,
@@ -233,7 +265,7 @@ struct InspectorPanelView: View {
                         .foregroundStyle(Theme.text2)
                         .frame(width: 64, alignment: .leading)
                     Text(command)
-                        .font(.system(size: 11, design: .monospaced))
+                        .font(.system(size: 12, design: .monospaced))
                         .lineLimit(1)
                         .truncationMode(.tail)
                         .frame(maxWidth: .infinity, alignment: .leading)

@@ -41,12 +41,7 @@ struct PerformanceView: View {
             let status = model.resourceStatus(model.resource)
             StatusBadge(kind: status.0, label: status.1)
             if model.resource == .cpu {
-                Picker("CPU 视图", selection: $model.cpuShowPerCore) {
-                    Text("总体").tag(false)
-                    Text("逐逻辑核心").tag(true)
-                }
-                .pickerStyle(.segmented)
-                .fixedSize()
+                cpuViewPicker
             }
             if model.resource == .network {
                 Picker("网卡", selection: $model.selectedInterface) {
@@ -58,13 +53,7 @@ struct PerformanceView: View {
                 .labelsHidden()
                 .help("选择网卡")
             }
-            Picker("时间范围", selection: $model.range) {
-                Text("60 秒").tag(TimeInterval(60))
-                Text("5 分钟").tag(TimeInterval(300))
-                Text("15 分钟").tag(TimeInterval(900))
-            }
-            .pickerStyle(.segmented)
-            .fixedSize()
+            rangePicker
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 10)
@@ -76,6 +65,53 @@ struct PerformanceView: View {
         case .memory: "Memory（内存）"
         case .disk: "Disk（磁盘）"
         case .network: "Network（网络）"
+        }
+    }
+
+    /// 紧凑模式下用菜单样式（更窄），常规用分段控件。
+    @ViewBuilder
+    private var cpuViewPicker: some View {
+        if compact {
+            Picker("CPU 视图", selection: $model.cpuShowPerCore) {
+                Text("总体").tag(false)
+                Text("逐逻辑核心").tag(true)
+            }
+            .pickerStyle(.menu)
+            .fixedSize()
+            .labelsHidden()
+            .help("CPU 视图")
+        } else {
+            Picker("CPU 视图", selection: $model.cpuShowPerCore) {
+                Text("总体").tag(false)
+                Text("逐逻辑核心").tag(true)
+            }
+            .pickerStyle(.segmented)
+            .fixedSize()
+            .labelsHidden()
+        }
+    }
+
+    @ViewBuilder
+    private var rangePicker: some View {
+        if compact {
+            Picker("时间范围", selection: $model.range) {
+                Text("60 秒").tag(TimeInterval(60))
+                Text("5 分钟").tag(TimeInterval(300))
+                Text("15 分钟").tag(TimeInterval(900))
+            }
+            .pickerStyle(.menu)
+            .fixedSize()
+            .labelsHidden()
+            .help("时间范围")
+        } else {
+            Picker("时间范围", selection: $model.range) {
+                Text("60 秒").tag(TimeInterval(60))
+                Text("5 分钟").tag(TimeInterval(300))
+                Text("15 分钟").tag(TimeInterval(900))
+            }
+            .pickerStyle(.segmented)
+            .fixedSize()
+            .labelsHidden()
         }
     }
 
@@ -427,16 +463,16 @@ struct PerformanceView: View {
             .background(Theme.raised)
             .overlay(RoundedRectangle(cornerRadius: Theme.radiusM).strokeBorder(Theme.sep, lineWidth: 1))
             .clipShape(RoundedRectangle(cornerRadius: Theme.radiusM))
-        case .network:
-            Text("本阶段不展示「每进程网络速率」——该指标口径尚未定义，避免误导。")
-                .font(.system(size: 11))
-                .foregroundStyle(Theme.text2)
-                .padding(.horizontal, 12)
-                .padding(.vertical, 7)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .background(Theme.inset)
-                .overlay(RoundedRectangle(cornerRadius: Theme.radiusM).strokeBorder(Theme.sep, lineWidth: 1))
-                .clipShape(RoundedRectangle(cornerRadius: Theme.radiusM))
+//        case .network:
+//            Text("本阶段不展示「每进程网络速率」——该指标口径尚未定义，避免误导。")
+//                .font(.system(size: 11))
+//                .foregroundStyle(Theme.text2)
+//                .padding(.horizontal, 12)
+//                .padding(.vertical, 7)
+//                .frame(maxWidth: .infinity, alignment: .leading)
+//                .background(Theme.inset)
+//                .overlay(RoundedRectangle(cornerRadius: Theme.radiusM).strokeBorder(Theme.sep, lineWidth: 1))
+//                .clipShape(RoundedRectangle(cornerRadius: Theme.radiusM))
         default:
             EmptyView()
         }

@@ -12,6 +12,15 @@ final class ProcessCollector {
     private var lastSampleAt: Date?
     private let minimumInterval: TimeInterval = 0.2
 
+    /// pti_total_user/system 的单位是 Mach 绝对时间 tick，不是纳秒。
+    /// Apple Silicon 上 1 tick = 125/3 ns（24MHz），必须经 mach_timebase_info 换算，
+    /// 否则所有进程 CPU 会被低估约 41.7 倍。
+    private let tickToNanoseconds: Double = {
+        var info = mach_timebase_info_data_t()
+        mach_timebase_info(&info)
+        return Double(info.numer) / Double(info.denom)
+    }()
+
     func sample(generation: UInt64) -> Result<ProcessSnapshot, CollectorError> {
         let sampleReady = lastSampleAt.map { Date().timeIntervalSince($0) >= minimumInterval } ?? false
         let pids: [pid_t]
@@ -114,7 +123,7 @@ final class ProcessCollector {
         guard let lastSampleAt else { return nil }
         let elapsed = Date().timeIntervalSince(lastSampleAt)
         guard elapsed > 0 else { return nil }
-        let total = Double(deltaUser + deltaSys) / 1_000_000_000
+        let total = Double(deltaUser + deltaSys) * tickToNanoseconds / 1_000_000_000
         let cores = max(1, ProcessInfo.processInfo.processorCount)
         let percent = (total / elapsed) * 100 / Double(cores)
         guard percent.isFinite else { return nil }
