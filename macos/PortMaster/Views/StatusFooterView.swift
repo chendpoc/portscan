@@ -49,7 +49,7 @@ struct StatusFooterView: View {
                     },
                 ))
                 if model.page == .ports {
-                    Picker("端口筛选", selection: $model.portsFilter) {
+                    Picker("端口筛选", selection: $model.ports.filter) {
                         Text("仅监听").tag(PortsFilter.listeners)
                         Text("全部套接字").tag(PortsFilter.all)
                     }
@@ -90,8 +90,8 @@ struct StatusFooterView: View {
 
     private var countText: String {
         switch model.page {
-        case .processes: "\(model.visibleProcesses.count) 个进程"
-        case .ports: "\(model.visiblePorts.count) 个端口"
+        case .processes: "\(model.processes.visible(in: model.monitor, query: model.query).count) 个进程"
+        case .ports: "\(model.ports.visible(in: model.monitor, query: model.query).count) 个端口"
         case .performance: "\(model.monitor.processes?.entries.count ?? 0) 个进程"
         }
     }

@@ -4,21 +4,35 @@ import SwiftUI
 struct SearchField: View {
     let placeholder: String
     @Binding var text: String
+    var width: CGFloat = 220
+    var focus: FocusState<Bool>.Binding?
 
     var body: some View {
         HStack(spacing: 6) {
             Image(systemName: "magnifyingglass")
                 .font(.system(size: 11))
                 .foregroundStyle(Theme.text3)
+            field
+        }
+        .padding(.horizontal, 8)
+        .padding(.vertical, 5)
+        .frame(width: width)
+        .background(Theme.inset)
+        .clipShape(RoundedRectangle(cornerRadius: 7))
+    }
+
+    @ViewBuilder
+    private var field: some View {
+        if let focus {
+            TextField(placeholder, text: $text)
+                .textFieldStyle(.plain)
+                .font(.system(size: 12.5))
+                .focused(focus)
+        } else {
             TextField(placeholder, text: $text)
                 .textFieldStyle(.plain)
                 .font(.system(size: 12.5))
         }
-        .padding(.horizontal, 8)
-        .padding(.vertical, 5)
-        .frame(width: 220)
-        .background(Theme.inset)
-        .clipShape(RoundedRectangle(cornerRadius: 7))
     }
 }
 

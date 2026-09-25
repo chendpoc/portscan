@@ -4,6 +4,10 @@ import SwiftUI
 struct PortsTableView: View {
     @Bindable var model: MonitorViewModel
 
+    private var visible: [SocketEntry] {
+        model.ports.visible(in: model.monitor, query: model.query)
+    }
+
     private let portWidth: CGFloat = 64
     private let protoWidth: CGFloat = 52
     private let stateWidth: CGFloat = 96
@@ -14,12 +18,15 @@ struct PortsTableView: View {
         VStack(spacing: 0) {
             PageHeadView(
                 title: "Ports",
-                count: "\(model.visiblePorts.count) 个监听端口",
+                count: "\(visible.count) 个监听端口",
                 placeholder: "搜索端口、进程或地址",
                 query: $model.query,
                 extra: { EmptyView() },
             )
-            if model.visiblePorts.isEmpty {
+            if model.ports.portScope != nil {
+                scopeBanner
+            }
+            if visible.isEmpty {
                 EmptyStateView(
                     title: "没有匹配的端口",
                     hint: "尝试更换关键词。可搜索端口号、进程名称或本地地址。",
@@ -28,7 +35,7 @@ struct PortsTableView: View {
                 ScrollView {
                     LazyVStack(spacing: 0, pinnedViews: [.sectionHeaders]) {
                         Section(header: headerRow) {
-                            ForEach(model.visiblePorts) { entry in
+                            ForEach(visible) { entry in
                                 PortRow(
                                     entry: entry,
                                     portWidth: portWidth,
@@ -43,7 +50,7 @@ struct PortsTableView: View {
                     }
                 }
             }
-            TableFootNote(items: [model.portsFilter == .listeners
+            TableFootNote(items: [model.ports.filter == .listeners
                 ? "仅展示监听（LISTEN）状态的本地端口 · 完全相同的绑定合并显示"
                 : "展示全部套接字（含已建立连接） · 完全相同的绑定合并显示"])
         }
@@ -62,6 +69,29 @@ struct PortsTableView: View {
         .padding(.vertical, 7)
         .background(Theme.raised)
         .overlay(alignment: .bottom) { Theme.sepStrong.frame(height: 1) }
+    }
+
+    /// 按进程过滤的作用域横幅（从 Inspector「查看全部端口」进入）。
+    private var scopeBanner: some View {
+        HStack(spacing: 8) {
+            Image(systemName: "line.3.horizontal.decrease.circle.fill")
+                .foregroundStyle(Theme.accent)
+            Text("仅显示 \(model.ports.scopedProcessName(in: model.monitor) ?? "所选进程") 的端口")
+                .font(.system(size: 12))
+            Spacer()
+            Button {
+                model.ports.clearScope()
+            } label: {
+                Image(systemName: "xmark.circle.fill")
+                    .foregroundStyle(Theme.text3)
+            }
+            .buttonStyle(.plain)
+            .help("清除进程过滤")
+        }
+        .padding(.horizontal, 14)
+        .padding(.vertical, 6)
+        .background(Theme.selected)
+        .overlay(alignment: .bottom) { Theme.sep.frame(height: 1) }
     }
 }
 

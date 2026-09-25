@@ -80,11 +80,11 @@ struct SidebarView: View {
     // MARK: - 资源卡片
 
     private func resourceCard(_ kind: ResourceKind, name: String) -> some View {
-        let active = model.resource == kind
-        let status = model.resourceStatus(kind)
+        let active = model.performance.resource == kind
+        let status = model.performance.resourceStatus(kind, paused: model.settings.paused)
         return Button {
             // 卡片兼作导航捷径：任意页面点击后直达 Performance 对应资源
-            model.resource = kind
+            model.performance.resource = kind
             model.page = .performance
         } label: {
             if compact {
@@ -128,16 +128,16 @@ struct SidebarView: View {
     private func cardValue(_ kind: ResourceKind) -> some View {
         switch kind {
         case .cpu:
-            Text(model.history.last?.cpuTotal.map(Format.percent) ?? "—")
+            Text(model.performance.history.last?.cpuTotal.map(Format.percent) ?? "—")
                 .font(.system(size: 13, weight: .semibold))
                 .monospacedDigit()
         case .memory:
-            Text(model.history.last.map { Format.bytes($0.memoryUsed) } ?? "—")
+            Text(model.performance.history.last.map { Format.bytes($0.memoryUsed) } ?? "—")
                 .font(.system(size: 13, weight: .semibold))
                 .monospacedDigit()
         case .network:
             HStack(alignment: .firstTextBaseline, spacing: 2) {
-                Text(model.netHistory[model.selectedInterface]?.last.map { Format.rate($0.rx) } ?? "—")
+                Text(model.performance.netHistory[model.performance.selectedInterface]?.last.map { Format.rate($0.rx) } ?? "—")
                     .font(.system(size: 13, weight: .semibold))
                     .monospacedDigit()
                 Text("↓")
@@ -145,7 +145,14 @@ struct SidebarView: View {
                     .foregroundStyle(Theme.text2)
             }
         case .disk:
-            PhaseTag(label: "后续阶段")
+            HStack(alignment: .firstTextBaseline, spacing: 2) {
+                Text(model.performance.diskHistory.last.map { Format.rate($0.read) } ?? "—")
+                    .font(.system(size: 13, weight: .semibold))
+                    .monospacedDigit()
+                Text("读")
+                    .font(.system(size: 10))
+                    .foregroundStyle(Theme.text2)
+            }
         }
     }
 
@@ -155,15 +162,17 @@ struct SidebarView: View {
         case .cpu:
             Text("\(ProcessInfo.processInfo.processorCount) 核").monospacedDigit()
         case .memory:
-            if let last = model.history.last {
+            if let last = model.performance.history.last {
                 Text("共 \(Format.bytes(last.memoryTotal))").monospacedDigit()
             }
         case .network:
-            if let last = model.netHistory[model.selectedInterface]?.last {
+            if let last = model.performance.netHistory[model.performance.selectedInterface]?.last {
                 Text("↑ \(Format.rate(last.tx))").monospacedDigit()
             }
         case .disk:
-            EmptyView()
+            if let last = model.performance.diskHistory.last {
+                Text("写 \(Format.rate(last.write))").monospacedDigit()
+            }
         }
     }
 
@@ -172,28 +181,31 @@ struct SidebarView: View {
         switch kind {
         case .cpu:
             SparklineView(
-                points: model.history.suffix(60).compactMap { sample in
+                points: model.performance.history.suffix(60).compactMap { sample in
                     sample.cpuTotal.map { ChartPoint(t: sample.capturedAt, v: $0) }
                 },
                 color: Theme.cpu,
                 yMax: 100,
             )
         case .memory:
-            let ceiling = model.history.last?.memoryTotal ?? 1
+            let ceiling = model.performance.history.last?.memoryTotal ?? 1
             SparklineView(
-                points: model.history.suffix(60).map { ChartPoint(t: $0.capturedAt, v: Double($0.memoryUsed)) },
+                points: model.performance.history.suffix(60).map { ChartPoint(t: $0.capturedAt, v: Double($0.memoryUsed)) },
                 color: Theme.mem,
                 yMax: Double(ceiling),
             )
         case .network:
             SparklineView(
-                points: (model.netHistory[model.selectedInterface] ?? []).suffix(60).map {
+                points: (model.performance.netHistory[model.performance.selectedInterface] ?? []).suffix(60).map {
                     ChartPoint(t: $0.t, v: $0.rx)
                 },
                 color: Theme.netDown,
             )
         case .disk:
-            EmptyView()
+            SparklineView(
+                points: model.performance.diskHistory.suffix(60).map { ChartPoint(t: $0.t, v: $0.read + $0.write) },
+                color: Theme.diskRead,
+            )
         }
     }
 }

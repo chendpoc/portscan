@@ -4,20 +4,26 @@ import SwiftUI
 struct ProcessTableView: View {
     @Bindable var model: MonitorViewModel
 
+    private var visible: [ProcessEntry] {
+        model.processes.visible(in: model.monitor, query: model.query)
+    }
+
     private let pidWidth: CGFloat = 64
     private let cpuWidth: CGFloat = 76
+    private let timeWidth: CGFloat = 84
+    private let threadsWidth: CGFloat = 56
     private let rssWidth: CGFloat = 90
 
     var body: some View {
         VStack(spacing: 0) {
             PageHeadView(
                 title: "Processes",
-                count: "\(model.visibleProcesses.count) 个进程",
+                count: "\(visible.count) 个进程",
                 placeholder: "搜索名称、PID、路径或端口",
                 query: $model.query,
-                extra: { EmptyView() },
+                extra: { filterPicker },
             )
-            if model.visibleProcesses.isEmpty {
+            if visible.isEmpty {
                 EmptyStateView(
                     title: "没有匹配的进程",
                     hint: "尝试更换关键词。可搜索进程名称、PID、可执行路径或本地端口号。",
@@ -26,7 +32,7 @@ struct ProcessTableView: View {
                 ScrollView {
                     LazyVStack(spacing: 0, pinnedViews: [.sectionHeaders]) {
                         Section(header: headerRow) {
-                            ForEach(model.visibleProcesses) { entry in
+                            ForEach(visible) { entry in
                                 row(entry)
                             }
                         }
@@ -38,6 +44,20 @@ struct ProcessTableView: View {
 
     // MARK: - 表头
 
+    /// 进程过滤器（计数反映最新清单与套接字归属，不受搜索框影响）。
+    private var filterPicker: some View {
+        let counts = model.processes.filterCounts(in: model.monitor)
+        return Picker("筛选", selection: $model.processes.filter) {
+            Text("全部 (\(counts.all))").tag(ProcessFilter.all)
+            Text("运行中 (\(counts.running))").tag(ProcessFilter.running)
+            Text("有监听端口 (\(counts.withListeners))").tag(ProcessFilter.withListeners)
+        }
+        .pickerStyle(.menu)
+        .fixedSize()
+        .labelsHidden()
+        .help("筛选进程清单")
+    }
+
     private var headerRow: some View {
         HStack(spacing: 0) {
             sortableHeader("名称", sort: .name, ascendingDefault: true)
@@ -47,6 +67,12 @@ struct ProcessTableView: View {
             sortableHeader("CPU % ⓘ", sort: .cpu, ascendingDefault: false,
                            help: "占整机总算力的百分比（全机合计 100%）")
                 .frame(width: cpuWidth, alignment: .leading)
+            sortableHeader("TIME ⓘ", sort: .time, ascendingDefault: false,
+                           help: "累计 CPU 时间（用户态 + 系统态）")
+                .frame(width: timeWidth, alignment: .leading)
+            sortableHeader("#TH ⓘ", sort: .threads, ascendingDefault: false,
+                           help: "线程总数")
+                .frame(width: threadsWidth, alignment: .leading)
             sortableHeader("内存 (RSS)", sort: .memory, ascendingDefault: false,
                            help: "常驻内存；各进程 RSS 之和不等于系统已用内存")
                 .frame(width: rssWidth, alignment: .leading)
@@ -66,17 +92,17 @@ struct ProcessTableView: View {
         help: String? = nil,
     ) -> some View {
         Button {
-            if model.processSort == sort {
-                model.sortDescending.toggle()
+            if model.processes.sort == sort {
+                model.processes.sortDescending.toggle()
             } else {
-                model.processSort = sort
-                model.sortDescending = !ascendingDefault
+                model.processes.sort = sort
+                model.processes.sortDescending = !ascendingDefault
             }
         } label: {
             HStack(spacing: 3) {
                 HeaderCell(title: title, help: help)
-                if model.processSort == sort {
-                    Text(model.sortDescending ? "▼" : "▲")
+                if model.processes.sort == sort {
+                    Text(model.processes.sortDescending ? "▼" : "▲")
                         .font(.system(size: 9))
                         .foregroundStyle(Theme.text2)
                 }
@@ -95,6 +121,8 @@ struct ProcessTableView: View {
             selected: selected,
             pidWidth: pidWidth,
             cpuWidth: cpuWidth,
+            timeWidth: timeWidth,
+            threadsWidth: threadsWidth,
             rssWidth: rssWidth,
             onSelect: { model.selectProcess(entry) },
             onCopyPath: { path in model.copyText(path, label: "工作目录") },
@@ -107,6 +135,8 @@ private struct ProcessRow: View {
     let selected: Bool
     let pidWidth: CGFloat
     let cpuWidth: CGFloat
+    let timeWidth: CGFloat
+    let threadsWidth: CGFloat
     let rssWidth: CGFloat
     let onSelect: () -> Void
     let onCopyPath: (String) -> Void
@@ -138,6 +168,15 @@ private struct ProcessRow: View {
             Text(entry.cpuPercent.map(Format.percent) ?? "采样…")
                 .monospacedDigit()
                 .frame(width: cpuWidth, alignment: .leading)
+
+            Text(entry.cpuTimeSeconds.map(Format.cpuTime) ?? "—")
+                .monospacedDigit()
+                .lineLimit(1)
+                .frame(width: timeWidth, alignment: .leading)
+
+            Text(entry.threadCount.map { String($0) } ?? "—")
+                .monospacedDigit()
+                .frame(width: threadsWidth, alignment: .leading)
 
             Text(entry.rssBytes.map(Format.bytes) ?? "—")
                 .monospacedDigit()

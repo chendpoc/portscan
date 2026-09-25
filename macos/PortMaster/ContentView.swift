@@ -1,12 +1,17 @@
 import AppKit
 import SwiftUI
 
+extension Notification.Name {
+    static let focusPortSearch = Notification.Name("pm.focusPortSearch")
+}
+
 /// 三栏布局：侧栏导航 + 主页面 + Inspector（按需打开）。
 /// <880px 进入紧凑模式：侧栏收窄为图标，Inspector 覆盖主区并提供返回。
 struct ContentView: View {
     @Bindable var model: MonitorViewModel
     @AppStorage("pm.theme") private var theme = "system"
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @FocusState private var portSearchFocused: Bool
 
     private var inspectorOpen: Bool { model.selectedKey != nil }
 
@@ -14,7 +19,7 @@ struct ContentView: View {
         GeometryReader { proxy in
             let compact = proxy.size.width < 880
             VStack(spacing: 0) {
-                TitleBarView(model: model)
+                TitleBarView(model: model, searchFocus: $portSearchFocused)
                 if let error = model.monitor.processError ?? model.monitor.socketError {
                     Text(error)
                         .font(.caption)
@@ -56,6 +61,9 @@ struct ContentView: View {
                 model.start()
             }
             .onChange(of: theme) { _, _ in applyAppearance() }
+            .onReceive(NotificationCenter.default.publisher(for: .focusPortSearch)) { _ in
+                portSearchFocused = true
+            }
             .onDisappear { model.stop() }
         }
         // 最小尺寸必须加在 GeometryReader 外层才会传导为窗口最小尺寸

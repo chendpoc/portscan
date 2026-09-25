@@ -4,12 +4,17 @@ import XCTest
 @testable import PortMaster
 
 /// 离屏渲染诊断：把关键窗口尺寸渲染成 PNG，人工核对布局。
+/// 渲染前启动真实采样并等待数据积累，输出到 /tmp/portmaster-*.png。
 final class RenderTests: XCTestCase {
     @MainActor
-    private func render(_ name: String, width: CGFloat, height: CGFloat, page: PrimaryView, resource: ResourceKind) throws {
+    private func render(_ name: String, width: CGFloat, height: CGFloat, page: PrimaryView, resource: ResourceKind) async throws {
         let model = MonitorViewModel()
+        model.start()
+        defer { model.stop() }
+        // 等待系统/网络采样与首轮进程/端口数据到达
+        try await Task.sleep(nanoseconds: 3_000_000_000)
         model.page = page
-        model.resource = resource
+        model.performance.resource = resource
         let view = ContentView(model: model).frame(width: width, height: height)
         let renderer = ImageRenderer(content: view)
         renderer.scale = 2
@@ -24,12 +29,27 @@ final class RenderTests: XCTestCase {
     }
 
     @MainActor
-    func testRenderCompactCPU() throws {
-        try render("compact-cpu", width: 760, height: 520, page: .performance, resource: .cpu)
+    func testRenderCompactCPU() async throws {
+        try await render("compact-cpu", width: 760, height: 520, page: .performance, resource: .cpu)
     }
 
     @MainActor
-    func testRenderCompactNetwork() throws {
-        try render("compact-network", width: 760, height: 520, page: .performance, resource: .network)
+    func testRenderCompactNetwork() async throws {
+        try await render("compact-network", width: 760, height: 520, page: .performance, resource: .network)
+    }
+
+    @MainActor
+    func testRenderProcesses() async throws {
+        try await render("processes", width: 1100, height: 720, page: .processes, resource: .cpu)
+    }
+
+    @MainActor
+    func testRenderMemory() async throws {
+        try await render("memory", width: 1100, height: 720, page: .performance, resource: .memory)
+    }
+
+    @MainActor
+    func testRenderDisk() async throws {
+        try await render("disk", width: 1100, height: 720, page: .performance, resource: .disk)
     }
 }

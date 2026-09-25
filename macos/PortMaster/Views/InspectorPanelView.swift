@@ -241,7 +241,7 @@ struct InspectorPanelView: View {
                 yMin: 0,
                 yMax: yMax,
                 yLabel: yLabel,
-                tickSeconds: model.tickInterval * 2,
+                tickSeconds: model.performance.tickInterval * 2,
                 height: 52,
                 mini: true,
             )
@@ -347,6 +347,15 @@ struct InspectorPanelView: View {
                             .help("跳转到 Ports 页查看")
                         }
                     }
+                    Button {
+                        model.scopePorts(to: key)
+                    } label: {
+                        Text("查看全部 \(endpoints.count) 个端口")
+                            .font(.system(size: 12))
+                            .foregroundStyle(Theme.accent)
+                    }
+                    .buttonStyle(.plain)
+                    .help("在 Ports 页按该进程过滤")
                 }
             }
         }

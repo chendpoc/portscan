@@ -6,92 +6,102 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		54265F49A45047E9ACCC2E28 /* NetworkThroughputCollector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A7C0EC9FA9248A99CD40AF0 /* NetworkThroughputCollector.swift */; };
-		428F246894264C2BB18F5EAA /* ProcessCollector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 025CF985C2784070B2E75A7F /* ProcessCollector.swift */; };
-		2ACB7152DA92420F942A17D7 /* ProcessContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = E656A5A24D934571BEA90AB9 /* ProcessContext.swift */; };
-		F33447AFC0A845628CCFC9C0 /* ProcessDetailService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85AB8E6B134C4F96BDBAC8AC /* ProcessDetailService.swift */; };
-		AE6397CCAFE34CFDA2DDF3A3 /* ProcessIdentity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FB48A6E4E4D40EC9DC1764A /* ProcessIdentity.swift */; };
-		4DF596B65E7B44BCAA3F8810 /* SocketCollector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 326E7308EE1946258A401AC1 /* SocketCollector.swift */; };
-		BCC345E74F624B97BA87E2C5 /* SystemMetricsCollector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80E059F79CFB4ABFBBE777E7 /* SystemMetricsCollector.swift */; };
-		FFB62C4F6D1E4570BE9EA347 /* socket_scan.c in Sources */ = {isa = PBXBuildFile; fileRef = D813B66F226240A18A58E75D /* socket_scan.c */; };
-		4B22F131229648EAB124203B /* socket_scan.h in Sources */ = {isa = PBXBuildFile; fileRef = 620B970719004CD8A9B31564 /* socket_scan.h */; };
-		32C4442EA7C14A60A52B6903 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21A8F2A556214C66855B3840 /* ContentView.swift */; };
-		5BF888B019FE486483D05D94 /* MonitorLogic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07AF190E1B7A412BACE0CFBD /* MonitorLogic.swift */; };
-		69E3B357F49C4F23BA9BE000 /* ProcessKeyFormatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = C42ED5359849418A8050495B /* ProcessKeyFormatting.swift */; };
-		7BA67B774C1B4975AB461E50 /* DomainModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCFD6A79161348BC81A14850 /* DomainModels.swift */; };
-		BE08778270E84FE4A1032F34 /* SystemMetrics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C1B3D6C91514ABDB4EE8D4B /* SystemMetrics.swift */; };
-		FAF069DBD31B484C8122D41F /* PortMaster-Bridging-Header.h in Sources */ = {isa = PBXBuildFile; fileRef = 55CE49199C514AAEB627F337 /* PortMaster-Bridging-Header.h */; };
-		6A3E3CF916384F92B06F4D3B /* PortMasterApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66B2F40C4C55404ABA07563B /* PortMasterApp.swift */; };
-		CE42CCDB2ECC4D2D98A1D823 /* InspectorReport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBFC5663C4749EAB4C4C98F /* InspectorReport.swift */; };
-		017309CA10E141D19D9EDFE3 /* MonitorService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66CB6E2E93AB4744A5645045 /* MonitorService.swift */; };
-		B223F33A8EBF4F868EDB0948 /* TerminalService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 462BA5A88113452CA474C4B0 /* TerminalService.swift */; };
-		06E6D0F8965E4908A8550096 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69CA5C97B21A4DD8BD23867C /* Theme.swift */; };
-		7D78B36717694F61A979AABD /* MonitorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F82C66A63A6C43AEB41F3128 /* MonitorViewModel.swift */; };
-		CA3123C3D7414396944BC10B /* MetricChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D26D4B030CB54DDF9F5ADF2A /* MetricChartView.swift */; };
-		A7E4974D59654089B6231C26 /* SparklineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A38EB581B81E4D57BD804F16 /* SparklineView.swift */; };
-		0AC89403061648C7B384F273 /* InspectorPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DFECFE48F06489F808F95F2 /* InspectorPanelView.swift */; };
-		40901401D6824486BC9E1C02 /* PerformanceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D73D8E27E6CD4987A9E45D35 /* PerformanceView.swift */; };
-		C491A3CC1E754C42BB32B4A4 /* PortsTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17C42E4921CE4AC79330D4D9 /* PortsTableView.swift */; };
-		89A5EBB1C4C943D4BCF74712 /* ProcessTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7B4973210434A4C8E8A45C4 /* ProcessTableView.swift */; };
-		F4AECEECD50D434D8F73ECD5 /* SidebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFB93714A034219A0077AE0 /* SidebarView.swift */; };
-		9611AF3F63964202A02D24EF /* StatusFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D51282B891484D7B836AF63E /* StatusFooterView.swift */; };
-		6E45F8EA4BB446569327A98A /* TablePrimitives.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95C1ACC57A614FF6A79355F1 /* TablePrimitives.swift */; };
-		45F9D1CC73504E15ACF744D6 /* TitleBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F31EF4B259BB4A52AFD7D2A9 /* TitleBarView.swift */; };
-		3349A1E9991841F99004EB4B /* MonitorLogicTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79BC902BD902459F9198FDC4 /* MonitorLogicTests.swift */; };
-		A4D4015EB29E4D60826DE903 /* ProcessCollectorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41C46CC2C66448038C915236 /* ProcessCollectorTests.swift */; };
-		5FCE2752DB0A404083E26AAE /* ProcessIdentityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA7B5F7824694371BAAC8C85 /* ProcessIdentityTests.swift */; };
-		4358AEEED5F84969B40E4E64 /* RenderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAE696AE497A4EEC9A23D462 /* RenderTests.swift */; };
+		DBFABAF292364B719E3753A2 /* DiskThroughputCollector.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBE73DA9DA994918A31ACBC5 /* DiskThroughputCollector.swift */; };
+		9247C7502D034E45A42188C4 /* NetworkThroughputCollector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C36273D87FC4E5DACDA0CCD /* NetworkThroughputCollector.swift */; };
+		B1104C985DBC476EABE3D076 /* ProcessCollector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82B83791AAD94382B8276A22 /* ProcessCollector.swift */; };
+		9BE846EC7DC44E3D8D741B11 /* ProcessContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5C17C754F3A4AC483DA7F23 /* ProcessContext.swift */; };
+		26F1E81C4A424DC7A8142105 /* ProcessDetailService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2E177273C9243B9A1F8B5BE /* ProcessDetailService.swift */; };
+		C228D21B470D4748A3450931 /* ProcessIdentity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55254C36AC8C428EBDB1BDC7 /* ProcessIdentity.swift */; };
+		870EFB5D579E49A09A36851F /* SocketCollector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69621D8BD50546798C149D5B /* SocketCollector.swift */; };
+		3222D2402B3E4226A0985838 /* SystemMetricsCollector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97B1D4E621AD4EFE973F82BE /* SystemMetricsCollector.swift */; };
+		CF566D9AF60D48D3BADF9626 /* socket_scan.c in Sources */ = {isa = PBXBuildFile; fileRef = 8E0DAE1F0E9146358E3B7F21 /* socket_scan.c */; };
+		EDB5ED89A88A463F9741F861 /* socket_scan.h in Sources */ = {isa = PBXBuildFile; fileRef = 7F61FE78D4504CF689642A67 /* socket_scan.h */; };
+		8043923998744B5CA925D1BF /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78BE60C1CBE84259945E6427 /* ContentView.swift */; };
+		4A22062E64CA418EA19287A0 /* MonitorLogic.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFEF14EC44F242CFB3B9D324 /* MonitorLogic.swift */; };
+		FE71E7096AA7479587CB3633 /* ProcessKeyFormatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 369A96C2572C4AFCB99F505E /* ProcessKeyFormatting.swift */; };
+		304EFD98B2B94855AC1A727F /* DomainModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6804C7FE2F30444BB95E4C55 /* DomainModels.swift */; };
+		98C110A487AD48CFBA2D7A88 /* SystemMetrics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0522204A3F4A487386116951 /* SystemMetrics.swift */; };
+		99A24F7400314C4CABB84825 /* PortMaster-Bridging-Header.h in Sources */ = {isa = PBXBuildFile; fileRef = 8236AA1A42D64127A0C71961 /* PortMaster-Bridging-Header.h */; };
+		28CBA32618F5484BAE866CE7 /* PortMasterApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E15AC9E51F1A4C3097ED4298 /* PortMasterApp.swift */; };
+		5CDF2232ED3F41AC902B97C1 /* InspectorReport.swift in Sources */ = {isa = PBXBuildFile; fileRef = A317B4E2ECC843C5BC826B9E /* InspectorReport.swift */; };
+		C4C8021FB597473DB7FFEBC8 /* MonitorService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E9D49BB5E449E6B1709D44 /* MonitorService.swift */; };
+		61E52546150246F6AE60C504 /* TerminalService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEE623E3CBA34AE999861AC7 /* TerminalService.swift */; };
+		7232281E9D5F4EFFB829E088 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8363473E2A404E7A86C8A6C7 /* Theme.swift */; };
+		25E17971E1BF43D8AFA65233 /* MonitorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A526E42645B42F19D0921AF /* MonitorViewModel.swift */; };
+		D245F1F7AF7B417D96E59425 /* Performance.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB7025DE24C3453496F5FC6D /* Performance.swift */; };
+		1B68B4B55DBF4B1080D66B00 /* Ports.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B867A29597F47D49610FC37 /* Ports.swift */; };
+		36A9F7E8CFFA42F7872FACBB /* Processes.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE070D9E30384225A4C0F733 /* Processes.swift */; };
+		5072CA5761C241588AC44DE0 /* MetricChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96516AE056E64B539185F3CD /* MetricChartView.swift */; };
+		3FC6E6BCB6AF4546B0E022D4 /* SparklineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9260D9B7632A4E34B8FD26C6 /* SparklineView.swift */; };
+		26CD86757C4C4576828FAACE /* InspectorPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B963F415E4542E48394E75F /* InspectorPanelView.swift */; };
+		C0055CABABBA4B18A054E082 /* PerformanceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F22455F9308449293E43575 /* PerformanceView.swift */; };
+		B5472042E1E84C8D907A7BFC /* PortsTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F1D9242507848B9964BCA75 /* PortsTableView.swift */; };
+		F7464AF54839444DAE381F7A /* ProcessTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93772E0C1AD24A2AB063FEFC /* ProcessTableView.swift */; };
+		2445C465A9F84765862D0E45 /* SidebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64900120D6E84DFF803A8B5C /* SidebarView.swift */; };
+		F650DB6FFFD64560B36F8DAD /* StatusFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1728D8A1F68F424BB84185C9 /* StatusFooterView.swift */; };
+		E9C545366FFD4E7EB651BDC3 /* TablePrimitives.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F2ED27A855543B4A811DD0B /* TablePrimitives.swift */; };
+		0A6324457A8E4129BB8E52FA /* TitleBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 572C029BD4564D81B6CEBD79 /* TitleBarView.swift */; };
+		D96E63863B464E0A9B01D711 /* DiskThroughputTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 312E9167F150405791D0957D /* DiskThroughputTests.swift */; };
+		8F951775EBB74C48A358D072 /* MonitorLogicTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 829FA9BF3F844A73BA1E1612 /* MonitorLogicTests.swift */; };
+		5B52AA246FDF404D936F78F9 /* ProcessCollectorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1906420DC1B642E8BF72CE45 /* ProcessCollectorTests.swift */; };
+		19DF1B48E3A14F0FB0BD8C8E /* ProcessIdentityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2DC81BBA92D4447AEB7E755 /* ProcessIdentityTests.swift */; };
+		E1DCEF242AA3400FBD002485 /* RenderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61969BE77E5B4C6DA9C972AB /* RenderTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		4A7C0EC9FA9248A99CD40AF0 /* NetworkThroughputCollector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Collectors/NetworkThroughputCollector.swift; sourceTree = "<group>"; };
-		025CF985C2784070B2E75A7F /* ProcessCollector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Collectors/ProcessCollector.swift; sourceTree = "<group>"; };
-		E656A5A24D934571BEA90AB9 /* ProcessContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Collectors/ProcessContext.swift; sourceTree = "<group>"; };
-		85AB8E6B134C4F96BDBAC8AC /* ProcessDetailService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Collectors/ProcessDetailService.swift; sourceTree = "<group>"; };
-		5FB48A6E4E4D40EC9DC1764A /* ProcessIdentity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Collectors/ProcessIdentity.swift; sourceTree = "<group>"; };
-		326E7308EE1946258A401AC1 /* SocketCollector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Collectors/SocketCollector.swift; sourceTree = "<group>"; };
-		80E059F79CFB4ABFBBE777E7 /* SystemMetricsCollector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Collectors/SystemMetricsCollector.swift; sourceTree = "<group>"; };
-		D813B66F226240A18A58E75D /* socket_scan.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Collectors/socket_scan.c; sourceTree = "<group>"; };
-		620B970719004CD8A9B31564 /* socket_scan.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Collectors/socket_scan.h; sourceTree = "<group>"; };
-		21A8F2A556214C66855B3840 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
-		07AF190E1B7A412BACE0CFBD /* MonitorLogic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logic/MonitorLogic.swift; sourceTree = "<group>"; };
-		C42ED5359849418A8050495B /* ProcessKeyFormatting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logic/ProcessKeyFormatting.swift; sourceTree = "<group>"; };
-		CCFD6A79161348BC81A14850 /* DomainModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models/DomainModels.swift; sourceTree = "<group>"; };
-		7C1B3D6C91514ABDB4EE8D4B /* SystemMetrics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models/SystemMetrics.swift; sourceTree = "<group>"; };
-		55CE49199C514AAEB627F337 /* PortMaster-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PortMaster-Bridging-Header.h; sourceTree = "<group>"; };
-		66B2F40C4C55404ABA07563B /* PortMasterApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortMasterApp.swift; sourceTree = "<group>"; };
-		5FBFC5663C4749EAB4C4C98F /* InspectorReport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/InspectorReport.swift; sourceTree = "<group>"; };
-		66CB6E2E93AB4744A5645045 /* MonitorService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/MonitorService.swift; sourceTree = "<group>"; };
-		462BA5A88113452CA474C4B0 /* TerminalService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/TerminalService.swift; sourceTree = "<group>"; };
-		69CA5C97B21A4DD8BD23867C /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme/Theme.swift; sourceTree = "<group>"; };
-		F82C66A63A6C43AEB41F3128 /* MonitorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModels/MonitorViewModel.swift; sourceTree = "<group>"; };
-		D26D4B030CB54DDF9F5ADF2A /* MetricChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/Charts/MetricChartView.swift; sourceTree = "<group>"; };
-		A38EB581B81E4D57BD804F16 /* SparklineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/Charts/SparklineView.swift; sourceTree = "<group>"; };
-		8DFECFE48F06489F808F95F2 /* InspectorPanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/InspectorPanelView.swift; sourceTree = "<group>"; };
-		D73D8E27E6CD4987A9E45D35 /* PerformanceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/PerformanceView.swift; sourceTree = "<group>"; };
-		17C42E4921CE4AC79330D4D9 /* PortsTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/PortsTableView.swift; sourceTree = "<group>"; };
-		D7B4973210434A4C8E8A45C4 /* ProcessTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/ProcessTableView.swift; sourceTree = "<group>"; };
-		2CFB93714A034219A0077AE0 /* SidebarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/SidebarView.swift; sourceTree = "<group>"; };
-		D51282B891484D7B836AF63E /* StatusFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/StatusFooterView.swift; sourceTree = "<group>"; };
-		95C1ACC57A614FF6A79355F1 /* TablePrimitives.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/TablePrimitives.swift; sourceTree = "<group>"; };
-		F31EF4B259BB4A52AFD7D2A9 /* TitleBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/TitleBarView.swift; sourceTree = "<group>"; };
-		79BC902BD902459F9198FDC4 /* MonitorLogicTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonitorLogicTests.swift; sourceTree = "<group>"; };
-		41C46CC2C66448038C915236 /* ProcessCollectorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessCollectorTests.swift; sourceTree = "<group>"; };
-		DA7B5F7824694371BAAC8C85 /* ProcessIdentityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessIdentityTests.swift; sourceTree = "<group>"; };
-		FAE696AE497A4EEC9A23D462 /* RenderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RenderTests.swift; sourceTree = "<group>"; };
-		77D21B13214449E7B9BEA7CC /* PortMaster.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PortMaster.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		5B49D58AAB424AE8842B45A0 /* PortMasterTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PortMasterTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		FBE73DA9DA994918A31ACBC5 /* DiskThroughputCollector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Collectors/DiskThroughputCollector.swift; sourceTree = "<group>"; };
+		4C36273D87FC4E5DACDA0CCD /* NetworkThroughputCollector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Collectors/NetworkThroughputCollector.swift; sourceTree = "<group>"; };
+		82B83791AAD94382B8276A22 /* ProcessCollector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Collectors/ProcessCollector.swift; sourceTree = "<group>"; };
+		C5C17C754F3A4AC483DA7F23 /* ProcessContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Collectors/ProcessContext.swift; sourceTree = "<group>"; };
+		E2E177273C9243B9A1F8B5BE /* ProcessDetailService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Collectors/ProcessDetailService.swift; sourceTree = "<group>"; };
+		55254C36AC8C428EBDB1BDC7 /* ProcessIdentity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Collectors/ProcessIdentity.swift; sourceTree = "<group>"; };
+		69621D8BD50546798C149D5B /* SocketCollector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Collectors/SocketCollector.swift; sourceTree = "<group>"; };
+		97B1D4E621AD4EFE973F82BE /* SystemMetricsCollector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Collectors/SystemMetricsCollector.swift; sourceTree = "<group>"; };
+		8E0DAE1F0E9146358E3B7F21 /* socket_scan.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Collectors/socket_scan.c; sourceTree = "<group>"; };
+		7F61FE78D4504CF689642A67 /* socket_scan.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Collectors/socket_scan.h; sourceTree = "<group>"; };
+		78BE60C1CBE84259945E6427 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		CFEF14EC44F242CFB3B9D324 /* MonitorLogic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logic/MonitorLogic.swift; sourceTree = "<group>"; };
+		369A96C2572C4AFCB99F505E /* ProcessKeyFormatting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logic/ProcessKeyFormatting.swift; sourceTree = "<group>"; };
+		6804C7FE2F30444BB95E4C55 /* DomainModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models/DomainModels.swift; sourceTree = "<group>"; };
+		0522204A3F4A487386116951 /* SystemMetrics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models/SystemMetrics.swift; sourceTree = "<group>"; };
+		8236AA1A42D64127A0C71961 /* PortMaster-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PortMaster-Bridging-Header.h; sourceTree = "<group>"; };
+		E15AC9E51F1A4C3097ED4298 /* PortMasterApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortMasterApp.swift; sourceTree = "<group>"; };
+		A317B4E2ECC843C5BC826B9E /* InspectorReport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/InspectorReport.swift; sourceTree = "<group>"; };
+		04E9D49BB5E449E6B1709D44 /* MonitorService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/MonitorService.swift; sourceTree = "<group>"; };
+		DEE623E3CBA34AE999861AC7 /* TerminalService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/TerminalService.swift; sourceTree = "<group>"; };
+		8363473E2A404E7A86C8A6C7 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme/Theme.swift; sourceTree = "<group>"; };
+		4A526E42645B42F19D0921AF /* MonitorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModels/MonitorViewModel.swift; sourceTree = "<group>"; };
+		DB7025DE24C3453496F5FC6D /* Performance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModels/Performance.swift; sourceTree = "<group>"; };
+		0B867A29597F47D49610FC37 /* Ports.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModels/Ports.swift; sourceTree = "<group>"; };
+		EE070D9E30384225A4C0F733 /* Processes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModels/Processes.swift; sourceTree = "<group>"; };
+		96516AE056E64B539185F3CD /* MetricChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/Charts/MetricChartView.swift; sourceTree = "<group>"; };
+		9260D9B7632A4E34B8FD26C6 /* SparklineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/Charts/SparklineView.swift; sourceTree = "<group>"; };
+		5B963F415E4542E48394E75F /* InspectorPanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/InspectorPanelView.swift; sourceTree = "<group>"; };
+		9F22455F9308449293E43575 /* PerformanceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/PerformanceView.swift; sourceTree = "<group>"; };
+		4F1D9242507848B9964BCA75 /* PortsTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/PortsTableView.swift; sourceTree = "<group>"; };
+		93772E0C1AD24A2AB063FEFC /* ProcessTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/ProcessTableView.swift; sourceTree = "<group>"; };
+		64900120D6E84DFF803A8B5C /* SidebarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/SidebarView.swift; sourceTree = "<group>"; };
+		1728D8A1F68F424BB84185C9 /* StatusFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/StatusFooterView.swift; sourceTree = "<group>"; };
+		2F2ED27A855543B4A811DD0B /* TablePrimitives.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/TablePrimitives.swift; sourceTree = "<group>"; };
+		572C029BD4564D81B6CEBD79 /* TitleBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/TitleBarView.swift; sourceTree = "<group>"; };
+		312E9167F150405791D0957D /* DiskThroughputTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiskThroughputTests.swift; sourceTree = "<group>"; };
+		829FA9BF3F844A73BA1E1612 /* MonitorLogicTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonitorLogicTests.swift; sourceTree = "<group>"; };
+		1906420DC1B642E8BF72CE45 /* ProcessCollectorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessCollectorTests.swift; sourceTree = "<group>"; };
+		C2DC81BBA92D4447AEB7E755 /* ProcessIdentityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessIdentityTests.swift; sourceTree = "<group>"; };
+		61969BE77E5B4C6DA9C972AB /* RenderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RenderTests.swift; sourceTree = "<group>"; };
+		1D04DB181003455683F02658 /* PortMaster.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PortMaster.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		06D4E34DECB948EFB31EC216 /* PortMasterTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PortMasterTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		2732AB5538C2444BA6582E7E /* Frameworks */ = {
+		257ED6D3FD7641D8A6477A90 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		F0D06E1F2A3B4365BE9D1B73 /* Frameworks */ = {
+		B92B2E4E37E24BA792C028B6 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -101,69 +111,74 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		0D9BC49F0D544C76B689BDB1 = {
+		2B41BC01082141B8B662F42C = {
 			isa = PBXGroup;
 			children = (
-				BC8494DAF7274484A805C4C6 /* PortMaster */,
-				FEACEA6D2BD64D8E97754745 /* PortMasterTests */,
-				15154747BCC04DBCBB7AC631 /* Products */,
+				15BEE14A5B674594996A07F8 /* PortMaster */,
+				29248505C8544B3F948E3CF7 /* PortMasterTests */,
+				98E21561CBE84C69BAC69355 /* Products */,
 			);
 			sourceTree = "<group>";
 		};
-		BC8494DAF7274484A805C4C6 /* PortMaster */ = {
+		15BEE14A5B674594996A07F8 /* PortMaster */ = {
 			isa = PBXGroup;
 			children = (
-				4A7C0EC9FA9248A99CD40AF0 /* NetworkThroughputCollector.swift */,
-				025CF985C2784070B2E75A7F /* ProcessCollector.swift */,
-				E656A5A24D934571BEA90AB9 /* ProcessContext.swift */,
-				85AB8E6B134C4F96BDBAC8AC /* ProcessDetailService.swift */,
-				5FB48A6E4E4D40EC9DC1764A /* ProcessIdentity.swift */,
-				326E7308EE1946258A401AC1 /* SocketCollector.swift */,
-				80E059F79CFB4ABFBBE777E7 /* SystemMetricsCollector.swift */,
-				D813B66F226240A18A58E75D /* socket_scan.c */,
-				620B970719004CD8A9B31564 /* socket_scan.h */,
-				21A8F2A556214C66855B3840 /* ContentView.swift */,
-				07AF190E1B7A412BACE0CFBD /* MonitorLogic.swift */,
-				C42ED5359849418A8050495B /* ProcessKeyFormatting.swift */,
-				CCFD6A79161348BC81A14850 /* DomainModels.swift */,
-				7C1B3D6C91514ABDB4EE8D4B /* SystemMetrics.swift */,
-				55CE49199C514AAEB627F337 /* PortMaster-Bridging-Header.h */,
-				66B2F40C4C55404ABA07563B /* PortMasterApp.swift */,
-				5FBFC5663C4749EAB4C4C98F /* InspectorReport.swift */,
-				66CB6E2E93AB4744A5645045 /* MonitorService.swift */,
-				462BA5A88113452CA474C4B0 /* TerminalService.swift */,
-				69CA5C97B21A4DD8BD23867C /* Theme.swift */,
-				F82C66A63A6C43AEB41F3128 /* MonitorViewModel.swift */,
-				D26D4B030CB54DDF9F5ADF2A /* MetricChartView.swift */,
-				A38EB581B81E4D57BD804F16 /* SparklineView.swift */,
-				8DFECFE48F06489F808F95F2 /* InspectorPanelView.swift */,
-				D73D8E27E6CD4987A9E45D35 /* PerformanceView.swift */,
-				17C42E4921CE4AC79330D4D9 /* PortsTableView.swift */,
-				D7B4973210434A4C8E8A45C4 /* ProcessTableView.swift */,
-				2CFB93714A034219A0077AE0 /* SidebarView.swift */,
-				D51282B891484D7B836AF63E /* StatusFooterView.swift */,
-				95C1ACC57A614FF6A79355F1 /* TablePrimitives.swift */,
-				F31EF4B259BB4A52AFD7D2A9 /* TitleBarView.swift */,
+				FBE73DA9DA994918A31ACBC5 /* DiskThroughputCollector.swift */,
+				4C36273D87FC4E5DACDA0CCD /* NetworkThroughputCollector.swift */,
+				82B83791AAD94382B8276A22 /* ProcessCollector.swift */,
+				C5C17C754F3A4AC483DA7F23 /* ProcessContext.swift */,
+				E2E177273C9243B9A1F8B5BE /* ProcessDetailService.swift */,
+				55254C36AC8C428EBDB1BDC7 /* ProcessIdentity.swift */,
+				69621D8BD50546798C149D5B /* SocketCollector.swift */,
+				97B1D4E621AD4EFE973F82BE /* SystemMetricsCollector.swift */,
+				8E0DAE1F0E9146358E3B7F21 /* socket_scan.c */,
+				7F61FE78D4504CF689642A67 /* socket_scan.h */,
+				78BE60C1CBE84259945E6427 /* ContentView.swift */,
+				CFEF14EC44F242CFB3B9D324 /* MonitorLogic.swift */,
+				369A96C2572C4AFCB99F505E /* ProcessKeyFormatting.swift */,
+				6804C7FE2F30444BB95E4C55 /* DomainModels.swift */,
+				0522204A3F4A487386116951 /* SystemMetrics.swift */,
+				8236AA1A42D64127A0C71961 /* PortMaster-Bridging-Header.h */,
+				E15AC9E51F1A4C3097ED4298 /* PortMasterApp.swift */,
+				A317B4E2ECC843C5BC826B9E /* InspectorReport.swift */,
+				04E9D49BB5E449E6B1709D44 /* MonitorService.swift */,
+				DEE623E3CBA34AE999861AC7 /* TerminalService.swift */,
+				8363473E2A404E7A86C8A6C7 /* Theme.swift */,
+				4A526E42645B42F19D0921AF /* MonitorViewModel.swift */,
+				DB7025DE24C3453496F5FC6D /* Performance.swift */,
+				0B867A29597F47D49610FC37 /* Ports.swift */,
+				EE070D9E30384225A4C0F733 /* Processes.swift */,
+				96516AE056E64B539185F3CD /* MetricChartView.swift */,
+				9260D9B7632A4E34B8FD26C6 /* SparklineView.swift */,
+				5B963F415E4542E48394E75F /* InspectorPanelView.swift */,
+				9F22455F9308449293E43575 /* PerformanceView.swift */,
+				4F1D9242507848B9964BCA75 /* PortsTableView.swift */,
+				93772E0C1AD24A2AB063FEFC /* ProcessTableView.swift */,
+				64900120D6E84DFF803A8B5C /* SidebarView.swift */,
+				1728D8A1F68F424BB84185C9 /* StatusFooterView.swift */,
+				2F2ED27A855543B4A811DD0B /* TablePrimitives.swift */,
+				572C029BD4564D81B6CEBD79 /* TitleBarView.swift */,
 			);
 			path = PortMaster;
 			sourceTree = "<group>";
 		};
-		FEACEA6D2BD64D8E97754745 /* PortMasterTests */ = {
+		29248505C8544B3F948E3CF7 /* PortMasterTests */ = {
 			isa = PBXGroup;
 			children = (
-				79BC902BD902459F9198FDC4 /* MonitorLogicTests.swift */,
-				41C46CC2C66448038C915236 /* ProcessCollectorTests.swift */,
-				DA7B5F7824694371BAAC8C85 /* ProcessIdentityTests.swift */,
-				FAE696AE497A4EEC9A23D462 /* RenderTests.swift */,
+				312E9167F150405791D0957D /* DiskThroughputTests.swift */,
+				829FA9BF3F844A73BA1E1612 /* MonitorLogicTests.swift */,
+				1906420DC1B642E8BF72CE45 /* ProcessCollectorTests.swift */,
+				C2DC81BBA92D4447AEB7E755 /* ProcessIdentityTests.swift */,
+				61969BE77E5B4C6DA9C972AB /* RenderTests.swift */,
 			);
 			path = PortMasterTests;
 			sourceTree = "<group>";
 		};
-		15154747BCC04DBCBB7AC631 /* Products */ = {
+		98E21561CBE84C69BAC69355 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				77D21B13214449E7B9BEA7CC /* PortMaster.app */,
-				5B49D58AAB424AE8842B45A0 /* PortMasterTests.xctest */,
+				1D04DB181003455683F02658 /* PortMaster.app */,
+				06D4E34DECB948EFB31EC216 /* PortMasterTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -171,47 +186,47 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		9CCA0AE529A24E18B53C79BF /* PortMaster */ = {
+		5F1D7BCB18274DFFBC4FC60C /* PortMaster */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 0187247B62224E50AE89B12F /* Build configuration list for PBXNativeTarget "PortMaster" */;
+			buildConfigurationList = 177A84BB4FEB42EA83710DEC /* Build configuration list for PBXNativeTarget "PortMaster" */;
 			buildPhases = (
-				9C02436126E64ED691876AD3 /* Sources */,
-				53E5C40B291C468B93AA7CE3 /* Frameworks */,
+				E4D1ACA2CA4F4C6B899FDC8A /* Sources */,
+				80919E2106CB45609EADBE90 /* Frameworks */,
 			);
 			buildRules = ();
 			dependencies = ();
 			name = PortMaster;
 			productName = PortMaster;
-			productReference = 77D21B13214449E7B9BEA7CC /* PortMaster.app */;
+			productReference = 1D04DB181003455683F02658 /* PortMaster.app */;
 			productType = "com.apple.product-type.application";
 		};
-		040D8D8077CD4821B425417A /* PortMasterTests */ = {
+		788E3886818347F2B6D88401 /* PortMasterTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 180511D849C84EE9A862C29E /* Build configuration list for PBXNativeTarget "PortMasterTests" */;
+			buildConfigurationList = 8EFDBDC514D74787B1B07C3D /* Build configuration list for PBXNativeTarget "PortMasterTests" */;
 			buildPhases = (
-				F02DE68C05784B7F8F03D44E /* Sources */,
-				477A68AA33DF4500820FBFA8 /* Frameworks */,
+				CFAC90EC83454904A844D761 /* Sources */,
+				128FFF331057439BBAF2D45D /* Frameworks */,
 			);
 			buildRules = ();
 			dependencies = (
-				14FBAFACF13943F89AA985F3 /* PBXTargetDependency */,
+				81209A23EF854ACEB9F1D4F0 /* PBXTargetDependency */,
 			);
 			name = PortMasterTests;
 			productName = PortMasterTests;
-			productReference = 5B49D58AAB424AE8842B45A0 /* PortMasterTests.xctest */;
+			productReference = 06D4E34DECB948EFB31EC216 /* PortMasterTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		92B2D40FD7A54FEFB068ED5B /* Project object */ = {
+		AB04FDD9CD1041D584F839A1 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1600;
 				LastUpgradeCheck = 1600;
 			};
-			buildConfigurationList = 0C58788C2C384F43890075D7 /* Build configuration list for PBXProject "PortMaster" */;
+			buildConfigurationList = D0E7B1FE41BA4D2782A4FE89 /* Build configuration list for PBXProject "PortMaster" */;
 			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -219,89 +234,94 @@
 				en,
 				Base,
 			);
-			mainGroup = 0D9BC49F0D544C76B689BDB1;
-			productRefGroup = 15154747BCC04DBCBB7AC631 /* Products */;
+			mainGroup = 2B41BC01082141B8B662F42C;
+			productRefGroup = 98E21561CBE84C69BAC69355 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				9CCA0AE529A24E18B53C79BF /* PortMaster */,
-				040D8D8077CD4821B425417A /* PortMasterTests */,
+				5F1D7BCB18274DFFBC4FC60C /* PortMaster */,
+				788E3886818347F2B6D88401 /* PortMasterTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXSourcesBuildPhase section */
-		9C02436126E64ED691876AD3 /* Sources */ = {
+		E4D1ACA2CA4F4C6B899FDC8A /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				54265F49A45047E9ACCC2E28 /* NetworkThroughputCollector.swift in Sources */,
-				428F246894264C2BB18F5EAA /* ProcessCollector.swift in Sources */,
-				2ACB7152DA92420F942A17D7 /* ProcessContext.swift in Sources */,
-				F33447AFC0A845628CCFC9C0 /* ProcessDetailService.swift in Sources */,
-				AE6397CCAFE34CFDA2DDF3A3 /* ProcessIdentity.swift in Sources */,
-				4DF596B65E7B44BCAA3F8810 /* SocketCollector.swift in Sources */,
-				BCC345E74F624B97BA87E2C5 /* SystemMetricsCollector.swift in Sources */,
-				FFB62C4F6D1E4570BE9EA347 /* socket_scan.c in Sources */,
-				4B22F131229648EAB124203B /* socket_scan.h in Sources */,
-				32C4442EA7C14A60A52B6903 /* ContentView.swift in Sources */,
-				5BF888B019FE486483D05D94 /* MonitorLogic.swift in Sources */,
-				69E3B357F49C4F23BA9BE000 /* ProcessKeyFormatting.swift in Sources */,
-				7BA67B774C1B4975AB461E50 /* DomainModels.swift in Sources */,
-				BE08778270E84FE4A1032F34 /* SystemMetrics.swift in Sources */,
-				FAF069DBD31B484C8122D41F /* PortMaster-Bridging-Header.h in Sources */,
-				6A3E3CF916384F92B06F4D3B /* PortMasterApp.swift in Sources */,
-				CE42CCDB2ECC4D2D98A1D823 /* InspectorReport.swift in Sources */,
-				017309CA10E141D19D9EDFE3 /* MonitorService.swift in Sources */,
-				B223F33A8EBF4F868EDB0948 /* TerminalService.swift in Sources */,
-				06E6D0F8965E4908A8550096 /* Theme.swift in Sources */,
-				7D78B36717694F61A979AABD /* MonitorViewModel.swift in Sources */,
-				CA3123C3D7414396944BC10B /* MetricChartView.swift in Sources */,
-				A7E4974D59654089B6231C26 /* SparklineView.swift in Sources */,
-				0AC89403061648C7B384F273 /* InspectorPanelView.swift in Sources */,
-				40901401D6824486BC9E1C02 /* PerformanceView.swift in Sources */,
-				C491A3CC1E754C42BB32B4A4 /* PortsTableView.swift in Sources */,
-				89A5EBB1C4C943D4BCF74712 /* ProcessTableView.swift in Sources */,
-				F4AECEECD50D434D8F73ECD5 /* SidebarView.swift in Sources */,
-				9611AF3F63964202A02D24EF /* StatusFooterView.swift in Sources */,
-				6E45F8EA4BB446569327A98A /* TablePrimitives.swift in Sources */,
-				45F9D1CC73504E15ACF744D6 /* TitleBarView.swift in Sources */,
+				DBFABAF292364B719E3753A2 /* DiskThroughputCollector.swift in Sources */,
+				9247C7502D034E45A42188C4 /* NetworkThroughputCollector.swift in Sources */,
+				B1104C985DBC476EABE3D076 /* ProcessCollector.swift in Sources */,
+				9BE846EC7DC44E3D8D741B11 /* ProcessContext.swift in Sources */,
+				26F1E81C4A424DC7A8142105 /* ProcessDetailService.swift in Sources */,
+				C228D21B470D4748A3450931 /* ProcessIdentity.swift in Sources */,
+				870EFB5D579E49A09A36851F /* SocketCollector.swift in Sources */,
+				3222D2402B3E4226A0985838 /* SystemMetricsCollector.swift in Sources */,
+				CF566D9AF60D48D3BADF9626 /* socket_scan.c in Sources */,
+				EDB5ED89A88A463F9741F861 /* socket_scan.h in Sources */,
+				8043923998744B5CA925D1BF /* ContentView.swift in Sources */,
+				4A22062E64CA418EA19287A0 /* MonitorLogic.swift in Sources */,
+				FE71E7096AA7479587CB3633 /* ProcessKeyFormatting.swift in Sources */,
+				304EFD98B2B94855AC1A727F /* DomainModels.swift in Sources */,
+				98C110A487AD48CFBA2D7A88 /* SystemMetrics.swift in Sources */,
+				99A24F7400314C4CABB84825 /* PortMaster-Bridging-Header.h in Sources */,
+				28CBA32618F5484BAE866CE7 /* PortMasterApp.swift in Sources */,
+				5CDF2232ED3F41AC902B97C1 /* InspectorReport.swift in Sources */,
+				C4C8021FB597473DB7FFEBC8 /* MonitorService.swift in Sources */,
+				61E52546150246F6AE60C504 /* TerminalService.swift in Sources */,
+				7232281E9D5F4EFFB829E088 /* Theme.swift in Sources */,
+				25E17971E1BF43D8AFA65233 /* MonitorViewModel.swift in Sources */,
+				D245F1F7AF7B417D96E59425 /* Performance.swift in Sources */,
+				1B68B4B55DBF4B1080D66B00 /* Ports.swift in Sources */,
+				36A9F7E8CFFA42F7872FACBB /* Processes.swift in Sources */,
+				5072CA5761C241588AC44DE0 /* MetricChartView.swift in Sources */,
+				3FC6E6BCB6AF4546B0E022D4 /* SparklineView.swift in Sources */,
+				26CD86757C4C4576828FAACE /* InspectorPanelView.swift in Sources */,
+				C0055CABABBA4B18A054E082 /* PerformanceView.swift in Sources */,
+				B5472042E1E84C8D907A7BFC /* PortsTableView.swift in Sources */,
+				F7464AF54839444DAE381F7A /* ProcessTableView.swift in Sources */,
+				2445C465A9F84765862D0E45 /* SidebarView.swift in Sources */,
+				F650DB6FFFD64560B36F8DAD /* StatusFooterView.swift in Sources */,
+				E9C545366FFD4E7EB651BDC3 /* TablePrimitives.swift in Sources */,
+				0A6324457A8E4129BB8E52FA /* TitleBarView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		F02DE68C05784B7F8F03D44E /* Sources */ = {
+		CFAC90EC83454904A844D761 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3349A1E9991841F99004EB4B /* MonitorLogicTests.swift in Sources */,
-				A4D4015EB29E4D60826DE903 /* ProcessCollectorTests.swift in Sources */,
-				5FCE2752DB0A404083E26AAE /* ProcessIdentityTests.swift in Sources */,
-				4358AEEED5F84969B40E4E64 /* RenderTests.swift in Sources */,
+				D96E63863B464E0A9B01D711 /* DiskThroughputTests.swift in Sources */,
+				8F951775EBB74C48A358D072 /* MonitorLogicTests.swift in Sources */,
+				5B52AA246FDF404D936F78F9 /* ProcessCollectorTests.swift in Sources */,
+				19DF1B48E3A14F0FB0BD8C8E /* ProcessIdentityTests.swift in Sources */,
+				E1DCEF242AA3400FBD002485 /* RenderTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXContainerItemProxy section */
-		6F9BC220190149D986D8FC0F /* PBXContainerItemProxy */ = {
+		928CB918FA104BDAA4B48FF7 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 92B2D40FD7A54FEFB068ED5B /* Project object */;
+			containerPortal = AB04FDD9CD1041D584F839A1 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 9CCA0AE529A24E18B53C79BF;
+			remoteGlobalIDString = 5F1D7BCB18274DFFBC4FC60C;
 			remoteInfo = PortMaster;
 		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXTargetDependency section */
-		14FBAFACF13943F89AA985F3 /* PBXTargetDependency */ = {
+		81209A23EF854ACEB9F1D4F0 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 9CCA0AE529A24E18B53C79BF /* PortMaster */;
-			targetProxy = 6F9BC220190149D986D8FC0F /* PBXContainerItemProxy */;
+			target = 5F1D7BCB18274DFFBC4FC60C /* PortMaster */;
+			targetProxy = 928CB918FA104BDAA4B48FF7 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		781F63AA9D2547DD9F290434 /* Debug */ = {
+		0A52E011DDF2449497A52CFE /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -318,7 +338,7 @@
 			};
 			name = Debug;
 		};
-		3B79D28EA3474F198164DFC7 /* Release */ = {
+		D52E7B0C7CDE46F1BF7B4A2C /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -332,7 +352,7 @@
 			};
 			name = Release;
 		};
-		E488EAC885D34FC9AC227877 /* Debug */ = {
+		694DB1BB1EF54DF4996BCB6D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = PortMaster/PortMaster.entitlements;
@@ -356,7 +376,7 @@
 			};
 			name = Debug;
 		};
-		D5E64D82B81C4D0080C56F2F /* Release */ = {
+		4DF9BB0290164B909CFE2E3A /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = PortMaster/PortMaster.entitlements;
@@ -380,7 +400,7 @@
 			};
 			name = Release;
 		};
-		97BA567F91F547DC90D0110B /* Debug */ = {
+		9AFC16D6F8194F7B818E55D5 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -394,7 +414,7 @@
 			};
 			name = Debug;
 		};
-		40CFB01F6E2640B997395447 /* Release */ = {
+		54F1025DBB1B45628B4E7C7B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -411,34 +431,34 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		0187247B62224E50AE89B12F /* Build configuration list for PBXNativeTarget "PortMaster" */ = {
+		177A84BB4FEB42EA83710DEC /* Build configuration list for PBXNativeTarget "PortMaster" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				E488EAC885D34FC9AC227877 /* Debug */,
-				D5E64D82B81C4D0080C56F2F /* Release */,
+				694DB1BB1EF54DF4996BCB6D /* Debug */,
+				4DF9BB0290164B909CFE2E3A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		180511D849C84EE9A862C29E /* Build configuration list for PBXNativeTarget "PortMasterTests" */ = {
+		8EFDBDC514D74787B1B07C3D /* Build configuration list for PBXNativeTarget "PortMasterTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				97BA567F91F547DC90D0110B /* Debug */,
-				40CFB01F6E2640B997395447 /* Release */,
+				9AFC16D6F8194F7B818E55D5 /* Debug */,
+				54F1025DBB1B45628B4E7C7B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		0C58788C2C384F43890075D7 /* Build configuration list for PBXProject "PortMaster project" */ = {
+		D0E7B1FE41BA4D2782A4FE89 /* Build configuration list for PBXProject "PortMaster project" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				781F63AA9D2547DD9F290434 /* Debug */,
-				3B79D28EA3474F198164DFC7 /* Release */,
+				0A52E011DDF2449497A52CFE /* Debug */,
+				D52E7B0C7CDE46F1BF7B4A2C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
-	rootObject = 92B2D40FD7A54FEFB068ED5B /* Project object */;
+	rootObject = AB04FDD9CD1041D584F839A1 /* Project object */;
 }

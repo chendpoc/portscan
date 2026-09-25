@@ -3,13 +3,29 @@ import SwiftUI
 /// 自定义标题栏（hiddenTitleBar 窗口样式下代替原生标题栏）。
 struct TitleBarView: View {
     @Bindable var model: MonitorViewModel
+    var searchFocus: FocusState<Bool>.Binding
     @AppStorage("pm.theme") private var theme = "system"
+
+    /// 标题栏是端口搜索入口：输入即跳转到 Ports 页（与主区搜索共享 query）。
+    private var portQuery: Binding<String> {
+        Binding(
+            get: { model.query },
+            set: { value in
+                model.query = value
+                if !value.isEmpty {
+                    model.page = .ports
+                    model.ports.resetFiltersForPortSearch()
+                }
+            },
+        )
+    }
 
     var body: some View {
         HStack(spacing: 10) {
             Text("PortMaster")
                 .font(.system(size: 13, weight: .semibold))
             Spacer()
+            SearchField(placeholder: "端口搜索 ⌘K", text: portQuery, width: 160, focus: searchFocus)
             Button {
                 var settings = model.settings
                 settings.paused.toggle()

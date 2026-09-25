@@ -7,6 +7,8 @@ enum Theme {
     static let mem = Color(red: 48 / 255, green: 209 / 255, blue: 88 / 255)
     static let netDown = Color(red: 48 / 255, green: 209 / 255, blue: 88 / 255)
     static let netUp = accent
+    static let diskRead = Color(red: 255 / 255, green: 159 / 255, blue: 10 / 255)
+    static let diskWrite = Color(red: 191 / 255, green: 90 / 255, blue: 242 / 255)
     static let ok = Color(red: 40 / 255, green: 200 / 255, blue: 64 / 255)
     static let warn = Color(red: 255 / 255, green: 159 / 255, blue: 10 / 255)
     static let err = Color(red: 255 / 255, green: 69 / 255, blue: 58 / 255)
@@ -70,6 +72,19 @@ enum Format {
         if bytesPerSec >= 1_048_576 { return String(format: "%.1f MB/s", bytesPerSec / 1_048_576) }
         if bytesPerSec >= 1024 { return String(format: "%.0f KB/s", bytesPerSec / 1024) }
         return "\(Int(bytesPerSec.rounded())) B/s"
+    }
+
+    /// top 风格累计 CPU 时间：≥1 小时 "H:MM:SS"，否则 "M:SS.t"。
+    static func cpuTime(_ seconds: Double) -> String {
+        let total = Int(seconds)
+        let hours = total / 3600
+        let minutes = (total % 3600) / 60
+        let secs = total % 60
+        if hours > 0 {
+            return String(format: "%d:%02d:%02d", hours, minutes, secs)
+        }
+        let tenths = Int((seconds - Double(total)) * 10)
+        return String(format: "%d:%02d.%d", minutes, secs, tenths)
     }
 
     /// HH:mm:ss
