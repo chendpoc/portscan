@@ -1,0 +1,400 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		E1AA52292428484891B9D3F6 /* ProcessCollector.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5AFDB408BF948448121DFCD /* ProcessCollector.swift */; };
+		2736FD24854D4B11B76C763A /* ProcessContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9E2279E2EF0455F84511562 /* ProcessContext.swift */; };
+		2D0F608E968D403A8B7C6883 /* ProcessDetailService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6357E90B7E294FC7BDBBD070 /* ProcessDetailService.swift */; };
+		F94225FE78DF417B93856E7A /* ProcessIdentity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2849A15455C54DD5A86F8390 /* ProcessIdentity.swift */; };
+		24D4987058D54FC186CA457F /* SocketCollector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B5D8273777843489F0ACEF2 /* SocketCollector.swift */; };
+		7D317EBE69D143B1ADE43F89 /* socket_scan.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A9F82B5707A4C798B5034DC /* socket_scan.c */; };
+		9357B20C49174AB0BDDB9824 /* socket_scan.h in Sources */ = {isa = PBXBuildFile; fileRef = 7128631BF6714E5CBCFF7BD9 /* socket_scan.h */; };
+		52CBB91D93C7459BA1E8D1D8 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D36F9F4FC86346E991D3F874 /* ContentView.swift */; };
+		88E31F2014804BB7A4FBA0F0 /* MonitorLogic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01EFE06D2B674414AF6BF866 /* MonitorLogic.swift */; };
+		AC8E91CB878A42488686F4EC /* ProcessKeyFormatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64609676331B4B4EB931ED59 /* ProcessKeyFormatting.swift */; };
+		DCF718F2FABA4D209C6C24DB /* DomainModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 963730F265634F4B9B5B9E3A /* DomainModels.swift */; };
+		7F033C33E2824240A4B78909 /* PortMaster-Bridging-Header.h in Sources */ = {isa = PBXBuildFile; fileRef = 7C2D035A32C849A0B776DCD0 /* PortMaster-Bridging-Header.h */; };
+		094466FA79374565BC77B148 /* PortMasterApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B76AA29AD3448ABB125CD6 /* PortMasterApp.swift */; };
+		D2C98A39EAB943A7A5035C0B /* InspectorReport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC3926E567548E384F5D9C5 /* InspectorReport.swift */; };
+		428408D0551A4511ADD78D52 /* MonitorService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2CB1555CB84565BD396281 /* MonitorService.swift */; };
+		496BC8A4840D441AB7068745 /* TerminalService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19590B251C7646AE81A3D50F /* TerminalService.swift */; };
+		927BB57409504354A19AAED5 /* MonitorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F113A7C2AFE4F9CA5006604 /* MonitorViewModel.swift */; };
+		4DBCA8C49D4C49C0A742F780 /* AppToolbarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 142AA3C16D38487DBCFEE6C0 /* AppToolbarView.swift */; };
+		4D29EF0D0EEB4DFB82A01792 /* InspectorPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48581ACDC959431EAC490615 /* InspectorPanelView.swift */; };
+		A3E8B3F58B984645BFA7AC04 /* PortsTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 569B85A6ADFC43E49BB6B8B9 /* PortsTableView.swift */; };
+		E5B7343301A44D488DFD8A85 /* ProcessTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCF461119ACF43699B414FEA /* ProcessTableView.swift */; };
+		B004AC04023A4938B4B1820B /* StatusFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAAEFEEC9BDC47F3AC33A8F5 /* StatusFooterView.swift */; };
+		6B63D6EB729C4813A46FCEFB /* MonitorLogicTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B0B8EAFE8874ACBB7FBCFD5 /* MonitorLogicTests.swift */; };
+		BDF13FA8A0754DBA974A8F75 /* ProcessIdentityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93B8ACFAF3C647A8BA94D363 /* ProcessIdentityTests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		F5AFDB408BF948448121DFCD /* ProcessCollector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Collectors/ProcessCollector.swift; sourceTree = "<group>"; };
+		B9E2279E2EF0455F84511562 /* ProcessContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Collectors/ProcessContext.swift; sourceTree = "<group>"; };
+		6357E90B7E294FC7BDBBD070 /* ProcessDetailService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Collectors/ProcessDetailService.swift; sourceTree = "<group>"; };
+		2849A15455C54DD5A86F8390 /* ProcessIdentity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Collectors/ProcessIdentity.swift; sourceTree = "<group>"; };
+		3B5D8273777843489F0ACEF2 /* SocketCollector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Collectors/SocketCollector.swift; sourceTree = "<group>"; };
+		7A9F82B5707A4C798B5034DC /* socket_scan.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Collectors/socket_scan.c; sourceTree = "<group>"; };
+		7128631BF6714E5CBCFF7BD9 /* socket_scan.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Collectors/socket_scan.h; sourceTree = "<group>"; };
+		D36F9F4FC86346E991D3F874 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		01EFE06D2B674414AF6BF866 /* MonitorLogic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logic/MonitorLogic.swift; sourceTree = "<group>"; };
+		64609676331B4B4EB931ED59 /* ProcessKeyFormatting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logic/ProcessKeyFormatting.swift; sourceTree = "<group>"; };
+		963730F265634F4B9B5B9E3A /* DomainModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models/DomainModels.swift; sourceTree = "<group>"; };
+		7C2D035A32C849A0B776DCD0 /* PortMaster-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PortMaster-Bridging-Header.h; sourceTree = "<group>"; };
+		94B76AA29AD3448ABB125CD6 /* PortMasterApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortMasterApp.swift; sourceTree = "<group>"; };
+		0EC3926E567548E384F5D9C5 /* InspectorReport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/InspectorReport.swift; sourceTree = "<group>"; };
+		1A2CB1555CB84565BD396281 /* MonitorService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/MonitorService.swift; sourceTree = "<group>"; };
+		19590B251C7646AE81A3D50F /* TerminalService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/TerminalService.swift; sourceTree = "<group>"; };
+		4F113A7C2AFE4F9CA5006604 /* MonitorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModels/MonitorViewModel.swift; sourceTree = "<group>"; };
+		142AA3C16D38487DBCFEE6C0 /* AppToolbarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/AppToolbarView.swift; sourceTree = "<group>"; };
+		48581ACDC959431EAC490615 /* InspectorPanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/InspectorPanelView.swift; sourceTree = "<group>"; };
+		569B85A6ADFC43E49BB6B8B9 /* PortsTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/PortsTableView.swift; sourceTree = "<group>"; };
+		BCF461119ACF43699B414FEA /* ProcessTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/ProcessTableView.swift; sourceTree = "<group>"; };
+		FAAEFEEC9BDC47F3AC33A8F5 /* StatusFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/StatusFooterView.swift; sourceTree = "<group>"; };
+		3B0B8EAFE8874ACBB7FBCFD5 /* MonitorLogicTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonitorLogicTests.swift; sourceTree = "<group>"; };
+		93B8ACFAF3C647A8BA94D363 /* ProcessIdentityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessIdentityTests.swift; sourceTree = "<group>"; };
+		5C81F0F174734A799856566C /* PortMaster.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PortMaster.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		80284B2E444C4FBDB3481057 /* PortMasterTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PortMasterTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		34F83B0097B54739AFB7BE03 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		73D06251A57D4D67B9262F0C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		CA0AE87C8E68449A870CFE00 = {
+			isa = PBXGroup;
+			children = (
+				247FFD3FB81647F1BE56386D /* PortMaster */,
+				4B74D33C6F3746319EFB624A /* PortMasterTests */,
+				3256551B80E648AA88998150 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		247FFD3FB81647F1BE56386D /* PortMaster */ = {
+			isa = PBXGroup;
+			children = (
+				F5AFDB408BF948448121DFCD /* ProcessCollector.swift */,
+				B9E2279E2EF0455F84511562 /* ProcessContext.swift */,
+				6357E90B7E294FC7BDBBD070 /* ProcessDetailService.swift */,
+				2849A15455C54DD5A86F8390 /* ProcessIdentity.swift */,
+				3B5D8273777843489F0ACEF2 /* SocketCollector.swift */,
+				7A9F82B5707A4C798B5034DC /* socket_scan.c */,
+				7128631BF6714E5CBCFF7BD9 /* socket_scan.h */,
+				D36F9F4FC86346E991D3F874 /* ContentView.swift */,
+				01EFE06D2B674414AF6BF866 /* MonitorLogic.swift */,
+				64609676331B4B4EB931ED59 /* ProcessKeyFormatting.swift */,
+				963730F265634F4B9B5B9E3A /* DomainModels.swift */,
+				7C2D035A32C849A0B776DCD0 /* PortMaster-Bridging-Header.h */,
+				94B76AA29AD3448ABB125CD6 /* PortMasterApp.swift */,
+				0EC3926E567548E384F5D9C5 /* InspectorReport.swift */,
+				1A2CB1555CB84565BD396281 /* MonitorService.swift */,
+				19590B251C7646AE81A3D50F /* TerminalService.swift */,
+				4F113A7C2AFE4F9CA5006604 /* MonitorViewModel.swift */,
+				142AA3C16D38487DBCFEE6C0 /* AppToolbarView.swift */,
+				48581ACDC959431EAC490615 /* InspectorPanelView.swift */,
+				569B85A6ADFC43E49BB6B8B9 /* PortsTableView.swift */,
+				BCF461119ACF43699B414FEA /* ProcessTableView.swift */,
+				FAAEFEEC9BDC47F3AC33A8F5 /* StatusFooterView.swift */,
+			);
+			path = PortMaster;
+			sourceTree = "<group>";
+		};
+		4B74D33C6F3746319EFB624A /* PortMasterTests */ = {
+			isa = PBXGroup;
+			children = (
+				3B0B8EAFE8874ACBB7FBCFD5 /* MonitorLogicTests.swift */,
+				93B8ACFAF3C647A8BA94D363 /* ProcessIdentityTests.swift */,
+			);
+			path = PortMasterTests;
+			sourceTree = "<group>";
+		};
+		3256551B80E648AA88998150 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5C81F0F174734A799856566C /* PortMaster.app */,
+				80284B2E444C4FBDB3481057 /* PortMasterTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		11E5E2F99CC4497DAE68B82C /* PortMaster */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CA5A3B6AA6A0434BB74D6024 /* Build configuration list for PBXNativeTarget "PortMaster" */;
+			buildPhases = (
+				2CC110A8D89F4C5D9E026900 /* Sources */,
+				5553EE7DCA334C8CBCB6F5CD /* Frameworks */,
+			);
+			buildRules = ();
+			dependencies = ();
+			name = PortMaster;
+			productName = PortMaster;
+			productReference = 5C81F0F174734A799856566C /* PortMaster.app */;
+			productType = "com.apple.product-type.application";
+		};
+		3272D566D9DD4D19B2718658 /* PortMasterTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C9A998CF4EC8476AA866AD6B /* Build configuration list for PBXNativeTarget "PortMasterTests" */;
+			buildPhases = (
+				E92A0DC9D06944EA93F6B505 /* Sources */,
+				B27AABD3AE5A4E698336ABFF /* Frameworks */,
+			);
+			buildRules = ();
+			dependencies = (
+				EC8DC35B7B7B40FCA3C58E54 /* PBXTargetDependency */,
+			);
+			name = PortMasterTests;
+			productName = PortMasterTests;
+			productReference = 80284B2E444C4FBDB3481057 /* PortMasterTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		633B0620E5ED4CE19FA1B6F7 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1600;
+				LastUpgradeCheck = 1600;
+			};
+			buildConfigurationList = E2433A095D4F4E739FEA197C /* Build configuration list for PBXProject "PortMaster" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = CA0AE87C8E68449A870CFE00;
+			productRefGroup = 3256551B80E648AA88998150 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				11E5E2F99CC4497DAE68B82C /* PortMaster */,
+				3272D566D9DD4D19B2718658 /* PortMasterTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		2CC110A8D89F4C5D9E026900 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E1AA52292428484891B9D3F6 /* ProcessCollector.swift in Sources */,
+				2736FD24854D4B11B76C763A /* ProcessContext.swift in Sources */,
+				2D0F608E968D403A8B7C6883 /* ProcessDetailService.swift in Sources */,
+				F94225FE78DF417B93856E7A /* ProcessIdentity.swift in Sources */,
+				24D4987058D54FC186CA457F /* SocketCollector.swift in Sources */,
+				7D317EBE69D143B1ADE43F89 /* socket_scan.c in Sources */,
+				9357B20C49174AB0BDDB9824 /* socket_scan.h in Sources */,
+				52CBB91D93C7459BA1E8D1D8 /* ContentView.swift in Sources */,
+				88E31F2014804BB7A4FBA0F0 /* MonitorLogic.swift in Sources */,
+				AC8E91CB878A42488686F4EC /* ProcessKeyFormatting.swift in Sources */,
+				DCF718F2FABA4D209C6C24DB /* DomainModels.swift in Sources */,
+				7F033C33E2824240A4B78909 /* PortMaster-Bridging-Header.h in Sources */,
+				094466FA79374565BC77B148 /* PortMasterApp.swift in Sources */,
+				D2C98A39EAB943A7A5035C0B /* InspectorReport.swift in Sources */,
+				428408D0551A4511ADD78D52 /* MonitorService.swift in Sources */,
+				496BC8A4840D441AB7068745 /* TerminalService.swift in Sources */,
+				927BB57409504354A19AAED5 /* MonitorViewModel.swift in Sources */,
+				4DBCA8C49D4C49C0A742F780 /* AppToolbarView.swift in Sources */,
+				4D29EF0D0EEB4DFB82A01792 /* InspectorPanelView.swift in Sources */,
+				A3E8B3F58B984645BFA7AC04 /* PortsTableView.swift in Sources */,
+				E5B7343301A44D488DFD8A85 /* ProcessTableView.swift in Sources */,
+				B004AC04023A4938B4B1820B /* StatusFooterView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E92A0DC9D06944EA93F6B505 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6B63D6EB729C4813A46FCEFB /* MonitorLogicTests.swift in Sources */,
+				BDF13FA8A0754DBA974A8F75 /* ProcessIdentityTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXContainerItemProxy section */
+		EA9F5EF758E44524856F0A11 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 633B0620E5ED4CE19FA1B6F7 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 11E5E2F99CC4497DAE68B82C;
+			remoteInfo = PortMaster;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXTargetDependency section */
+		EC8DC35B7B7B40FCA3C58E54 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 11E5E2F99CC4497DAE68B82C /* PortMaster */;
+			targetProxy = EA9F5EF758E44524856F0A11 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		4CA41030E79B464692845580 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_TESTABILITY = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				ONLY_ACTIVE_ARCH = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		93C8630141364D1DB8FCDCDD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		B3149528D9DE421AAEE3D4CF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = PortMaster/PortMaster.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = PortMaster;
+				INFOPLIST_KEY_LSMinimumSystemVersion = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 0.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.portmaster.app;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "PortMaster/PortMaster-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		6B5D91EF8EAC44AC949DAE67 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = PortMaster/PortMaster.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = PortMaster;
+				INFOPLIST_KEY_LSMinimumSystemVersion = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 0.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.portmaster.app;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "PortMaster/PortMaster-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		BFEEA406041F471C8A7D79FD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.portmaster.app.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PortMaster.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/PortMaster";
+			};
+			name = Debug;
+		};
+		03A2EC102D6645D6B3737D67 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.portmaster.app.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PortMaster.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/PortMaster";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		CA5A3B6AA6A0434BB74D6024 /* Build configuration list for PBXNativeTarget "PortMaster" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B3149528D9DE421AAEE3D4CF /* Debug */,
+				6B5D91EF8EAC44AC949DAE67 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C9A998CF4EC8476AA866AD6B /* Build configuration list for PBXNativeTarget "PortMasterTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BFEEA406041F471C8A7D79FD /* Debug */,
+				03A2EC102D6645D6B3737D67 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E2433A095D4F4E739FEA197C /* Build configuration list for PBXProject "PortMaster project" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4CA41030E79B464692845580 /* Debug */,
+				93C8630141364D1DB8FCDCDD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 633B0620E5ED4CE19FA1B6F7 /* Project object */;
+}

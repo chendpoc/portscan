@@ -1,3 +1,5 @@
 {
-  "svelte.enable-ts-plugin": true
+  "files.exclude": {
+    "**/DerivedData": true
+  }
 }
