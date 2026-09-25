@@ -1,0 +1,7 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="54" height="16" viewBox="0 0 54 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="traffic-lights">
+<circle id="close" cx="6" cy="8" r="5.75" fill="#FF5F56" stroke="#E0443E" stroke-width="0.5"/>
+<circle id="minimize" cx="26" cy="8" r="5.75" fill="#FFBD2E" stroke="#DF9E20" stroke-width="0.5"/>
+<circle id="zoom" cx="46" cy="8" r="5.75" fill="#27C93F" stroke="#1CC02F" stroke-width="0.5"/>
+</g>
+</svg>

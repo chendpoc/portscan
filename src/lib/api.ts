@@ -1,12 +1,20 @@
 import { invoke } from '@tauri-apps/api/core'
-import type { LsofSample, RefreshSettings, SocketSnapshot } from './types'
+import type { LsofSample, MonitorState, ProcessDetail, ProcessKey, RefreshSettings } from './types'
 
-export function getSnapshot(): Promise<SocketSnapshot> {
-  return invoke('get_snapshot')
+export function getMonitorState(): Promise<MonitorState> {
+  return invoke('get_monitor_state')
 }
 
-export function refreshNow(): Promise<SocketSnapshot> {
-  return invoke('refresh_now')
+export function requestRefresh(): Promise<void> {
+  return invoke('request_refresh')
+}
+
+export function getProcessDetail(key: ProcessKey): Promise<ProcessDetail> {
+  return invoke('get_process_detail', { key })
+}
+
+export function openProcessTerminal(key: ProcessKey): Promise<void> {
+  return invoke('open_process_terminal', { key })
 }
 
 export function getSettings(): Promise<RefreshSettings> {

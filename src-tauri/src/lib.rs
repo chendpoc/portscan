@@ -18,12 +18,14 @@ pub fn run() {
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
-            commands::sockets::get_snapshot,
-            commands::sockets::refresh_now,
+            commands::sockets::get_monitor_state,
+            commands::sockets::request_refresh,
+            commands::processes::get_process_detail,
+            commands::processes::open_process_terminal,
             commands::sockets::diagnose_lsof,
             commands::settings::get_settings,
             commands::settings::update_settings,
         ])
         .run(tauri::generate_context!())
-        .expect("error while running portscan");
+        .expect("error while running portmaster");
 }

@@ -1,4 +1,6 @@
 mod interface_info;
+mod macos_context;
+mod macos_identity;
 mod netstat2;
 mod normalize;
 mod process_info;
@@ -6,9 +8,11 @@ mod process_info;
 use crate::model::{PidAssociatedSocket, RawSocket};
 
 pub use interface_info::InterfaceInfoCollector;
+pub use macos_context::verified_cwd_for_terminal;
+pub use macos_identity::process_start;
 pub use netstat2::Netstat2Collector;
 pub use normalize::normalize;
-pub use process_info::ProcessInfoCollector;
+pub use process_info::{process_detail, ProcessInfoCollector};
 
 /// Pick an owning PID for each raw socket.
 ///
@@ -46,7 +50,9 @@ fn unique_pids(pids: &[u32]) -> Vec<u32> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::model::{ProcessInfo, Protocol, RawSocket, SocketState};
+    use crate::model::{
+        PathEvidence, ProcessEntry, ProcessKey, ProcessState, Protocol, RawSocket, SocketState,
+    };
     use std::collections::HashMap;
 
     fn raw(state: SocketState, remote: Option<(&str, u16)>, pids: Vec<u32>) -> RawSocket {
@@ -77,15 +83,26 @@ mod tests {
         let mut processes = HashMap::new();
         processes.insert(
             10,
-            ProcessInfo {
-                pid: 10,
+            ProcessEntry {
+                key: ProcessKey {
+                    pid: 10,
+                    start_sec: 100,
+                    start_usec: Some(1),
+                },
                 name: "browser".into(),
-                exe: None,
-                memory_bytes: 1,
+                cpu_percent: Some(1.5),
+                rss_bytes: Some(1),
+                status: ProcessState::Running,
+                parent_pid: None,
+                cwd: PathEvidence::unavailable("test"),
+                executable: PathEvidence::unavailable("test"),
+                context_display: None,
+                context_kind: None,
             },
         );
         let entries = normalize(associated, &processes);
         assert_eq!(entries[0].pid, Some(10));
+        assert_eq!(entries[0].process_key, Some(processes[&10].key));
         assert_eq!(entries[0].process_name.as_deref(), Some("browser"));
         assert_eq!(entries[0].remote_address.as_deref(), Some("1.2.3.4"));
         assert_eq!(entries[0].remote_port, Some(443));

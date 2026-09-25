@@ -1,0 +1,442 @@
+[
+  {
+    "name": "01-processes-overview",
+    "geometry": {
+      "viewport": {
+        "width": 760,
+        "height": 520
+      },
+      "overflow": false,
+      "toolbar": {
+        "x": 1,
+        "y": 1,
+        "width": 758,
+        "height": 52,
+        "top": 1,
+        "right": 759,
+        "bottom": 53,
+        "left": 1
+      },
+      "footer": {
+        "x": 1,
+        "y": 495,
+        "width": 758,
+        "height": 24,
+        "top": 495,
+        "right": 759,
+        "bottom": 519,
+        "left": 1
+      },
+      "master": {
+        "x": 1,
+        "y": 53,
+        "width": 758,
+        "height": 442,
+        "top": 53,
+        "right": 759,
+        "bottom": 495,
+        "left": 1
+      },
+      "processHeader": {
+        "x": 1,
+        "y": 53,
+        "width": 758,
+        "height": 34,
+        "top": 53,
+        "right": 759,
+        "bottom": 87,
+        "left": 1
+      },
+      "processRow": {
+        "x": 1,
+        "y": 87,
+        "width": 758,
+        "height": 46,
+        "top": 87,
+        "right": 759,
+        "bottom": 133,
+        "left": 1
+      }
+    }
+  },
+  {
+    "name": "02-process-inspector",
+    "geometry": {
+      "viewport": {
+        "width": 760,
+        "height": 520
+      },
+      "overflow": false,
+      "toolbar": {
+        "x": 1,
+        "y": 1,
+        "width": 758,
+        "height": 52,
+        "top": 1,
+        "right": 759,
+        "bottom": 53,
+        "left": 1
+      },
+      "footer": {
+        "x": 1,
+        "y": 495,
+        "width": 758,
+        "height": 24,
+        "top": 495,
+        "right": 759,
+        "bottom": 519,
+        "left": 1
+      },
+      "master": {
+        "x": 1,
+        "y": 53,
+        "width": 424,
+        "height": 442,
+        "top": 53,
+        "right": 425,
+        "bottom": 495,
+        "left": 1
+      },
+      "inspector": {
+        "x": 425,
+        "y": 53,
+        "width": 334,
+        "height": 442,
+        "top": 53,
+        "right": 759,
+        "bottom": 495,
+        "left": 425
+      },
+      "processHeader": {
+        "x": 1,
+        "y": 53,
+        "width": 423,
+        "height": 34,
+        "top": 53,
+        "right": 424,
+        "bottom": 87,
+        "left": 1
+      },
+      "processRow": {
+        "x": 1,
+        "y": 87,
+        "width": 423,
+        "height": 46,
+        "top": 87,
+        "right": 424,
+        "bottom": 133,
+        "left": 1
+      }
+    }
+  },
+  {
+    "name": "03-search-filter",
+    "geometry": {
+      "viewport": {
+        "width": 760,
+        "height": 520
+      },
+      "overflow": false,
+      "toolbar": {
+        "x": 1,
+        "y": 1,
+        "width": 758,
+        "height": 52,
+        "top": 1,
+        "right": 759,
+        "bottom": 53,
+        "left": 1
+      },
+      "footer": {
+        "x": 1,
+        "y": 495,
+        "width": 758,
+        "height": 24,
+        "top": 495,
+        "right": 759,
+        "bottom": 519,
+        "left": 1
+      },
+      "master": {
+        "x": 1,
+        "y": 53,
+        "width": 758,
+        "height": 442,
+        "top": 53,
+        "right": 759,
+        "bottom": 495,
+        "left": 1
+      },
+      "processHeader": {
+        "x": 1,
+        "y": 81,
+        "width": 758,
+        "height": 34,
+        "top": 81,
+        "right": 759,
+        "bottom": 115,
+        "left": 1
+      },
+      "processRow": {
+        "x": 1,
+        "y": 115,
+        "width": 758,
+        "height": 46,
+        "top": 115,
+        "right": 759,
+        "bottom": 161,
+        "left": 1
+      }
+    }
+  },
+  {
+    "name": "04-cpu-sort",
+    "geometry": {
+      "viewport": {
+        "width": 760,
+        "height": 520
+      },
+      "overflow": false,
+      "toolbar": {
+        "x": 1,
+        "y": 1,
+        "width": 758,
+        "height": 52,
+        "top": 1,
+        "right": 759,
+        "bottom": 53,
+        "left": 1
+      },
+      "footer": {
+        "x": 1,
+        "y": 495,
+        "width": 758,
+        "height": 24,
+        "top": 495,
+        "right": 759,
+        "bottom": 519,
+        "left": 1
+      },
+      "master": {
+        "x": 1,
+        "y": 53,
+        "width": 758,
+        "height": 442,
+        "top": 53,
+        "right": 759,
+        "bottom": 495,
+        "left": 1
+      },
+      "processHeader": {
+        "x": 1,
+        "y": 53,
+        "width": 758,
+        "height": 34,
+        "top": 53,
+        "right": 759,
+        "bottom": 87,
+        "left": 1
+      },
+      "processRow": {
+        "x": 1,
+        "y": 87,
+        "width": 758,
+        "height": 46,
+        "top": 87,
+        "right": 759,
+        "bottom": 133,
+        "left": 1
+      }
+    }
+  },
+  {
+    "name": "05-ports-secondary",
+    "geometry": {
+      "viewport": {
+        "width": 760,
+        "height": 520
+      },
+      "overflow": false,
+      "toolbar": {
+        "x": 1,
+        "y": 1,
+        "width": 758,
+        "height": 52,
+        "top": 1,
+        "right": 759,
+        "bottom": 53,
+        "left": 1
+      },
+      "footer": {
+        "x": 1,
+        "y": 495,
+        "width": 758,
+        "height": 24,
+        "top": 495,
+        "right": 759,
+        "bottom": 519,
+        "left": 1
+      },
+      "master": {
+        "x": 1,
+        "y": 53,
+        "width": 758,
+        "height": 442,
+        "top": 53,
+        "right": 759,
+        "bottom": 495,
+        "left": 1
+      },
+      "processHeader": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "processRow": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      }
+    }
+  },
+  {
+    "name": "06-compact-overview",
+    "geometry": {
+      "viewport": {
+        "width": 640,
+        "height": 420
+      },
+      "overflow": false,
+      "toolbar": {
+        "x": 1,
+        "y": 1,
+        "width": 638,
+        "height": 52,
+        "top": 1,
+        "right": 639,
+        "bottom": 53,
+        "left": 1
+      },
+      "footer": {
+        "x": 1,
+        "y": 395,
+        "width": 638,
+        "height": 24,
+        "top": 395,
+        "right": 639,
+        "bottom": 419,
+        "left": 1
+      },
+      "master": {
+        "x": 1,
+        "y": 53,
+        "width": 638,
+        "height": 342,
+        "top": 53,
+        "right": 639,
+        "bottom": 395,
+        "left": 1
+      },
+      "processHeader": {
+        "x": 1,
+        "y": 53,
+        "width": 638,
+        "height": 34,
+        "top": 53,
+        "right": 639,
+        "bottom": 87,
+        "left": 1
+      },
+      "processRow": {
+        "x": 1,
+        "y": 87,
+        "width": 638,
+        "height": 46,
+        "top": 87,
+        "right": 639,
+        "bottom": 133,
+        "left": 1
+      }
+    }
+  },
+  {
+    "name": "07-compact-inspector",
+    "geometry": {
+      "viewport": {
+        "width": 640,
+        "height": 420
+      },
+      "overflow": false,
+      "toolbar": {
+        "x": 1,
+        "y": 1,
+        "width": 638,
+        "height": 52,
+        "top": 1,
+        "right": 639,
+        "bottom": 53,
+        "left": 1
+      },
+      "footer": {
+        "x": 1,
+        "y": 395,
+        "width": 638,
+        "height": 24,
+        "top": 395,
+        "right": 639,
+        "bottom": 419,
+        "left": 1
+      },
+      "master": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "inspector": {
+        "x": 1,
+        "y": 53,
+        "width": 638,
+        "height": 342,
+        "top": 53,
+        "right": 639,
+        "bottom": 395,
+        "left": 1
+      },
+      "processHeader": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "processRow": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      }
+    }
+  }
+]

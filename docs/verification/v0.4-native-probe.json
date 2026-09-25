@@ -1,0 +1,55 @@
+{
+  "evidence": "Actual macOS-backed repository collector source; CLI probe, not packaged UI acceptance",
+  "exited_identity_refused": true,
+  "ipv4_ipv6_udp_ports": [
+    51764,
+    51765,
+    64401
+  ],
+  "microsecond_mismatch_refused": true,
+  "multi_owner_socket": {
+    "observed_pids": [
+      42338,
+      42337,
+      42214
+    ],
+    "port": 51763
+  },
+  "process_count": 704,
+  "process_refresh_ms": 34.29775,
+  "restricted_cwd_count": 0,
+  "same_name_different_cwd": [
+    {
+      "cwd": {
+        "message": null,
+        "path": "/private/tmp/portmaster-v04-native-check/probe/api 'quoted' 空格",
+        "state": "available"
+      },
+      "identity": {
+        "pid": 42337,
+        "startSec": 1790243900,
+        "startUsec": 455636
+      },
+      "name": "sleep",
+      "pid": 42337
+    },
+    {
+      "cwd": {
+        "message": null,
+        "path": "/private/tmp/portmaster-v04-native-check/probe/web ui",
+        "state": "available"
+      },
+      "identity": {
+        "pid": 42338,
+        "startSec": 1790243900,
+        "startUsec": 457807
+      },
+      "name": "sleep",
+      "pid": 42338
+    }
+  ],
+  "socket_count": 134,
+  "socket_refresh_ms": 12.045,
+  "unavailable_cwd_count": 222,
+  "unknown_owner_raw_rows_observed": 0
+}

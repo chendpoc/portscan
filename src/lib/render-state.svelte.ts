@@ -1,241 +1,385 @@
 import { isTauri } from '@tauri-apps/api/core'
 import { listen, type UnlistenFn } from '@tauri-apps/api/event'
+import { getMonitorState, getSettings, requestRefresh, updateSettings } from './api'
+import { fixtureMonitorState, processKeyId } from './format'
+import { inspectorState } from './inspector-state.svelte'
 import {
-  diagnoseLsof,
-  getSettings,
-  refreshNow as invokeRefreshNow,
-  updateSettings,
-} from './api'
-import { fixtureSnapshot, stateLabel } from './format'
+  filterPorts,
+  filterProcesses,
+  isSnapshotStale,
+  listenerPortFilter,
+  listenPortsByProcess,
+  type ProcessFilter,
+  type ProcessSort,
+} from './monitor-logic'
+import {
+  applyBootstrapMonitorState,
+  applyProcessSnapshot,
+  applySocketSnapshot,
+  monitorCycleGeneration,
+  reduceProcessErrorEvent,
+  reduceRefreshComplete,
+  reduceRefreshFatal,
+  reduceSocketErrorEvent,
+  shouldClearFatalError,
+  type SourceGenerationState,
+} from './render-events'
+import type { RefreshFatal } from './types'
 import type {
-  LsofSample,
+  MonitorState,
+  PortsFilter,
+  PrimaryView,
+  ProcessEntry,
+  ProcessKey,
+  ProcessSnapshot,
   Protocol,
   RefreshSettings,
   RenderStatus,
-  SocketEntry,
+  SnapshotError,
   SocketSnapshot,
   SocketState,
 } from './types'
 
-let snapshot = $state<SocketSnapshot | null>(null)
-let status = $state<RenderStatus>('loading')
-let error = $state<string | null>(null)
-let query = $state('')
+let monitor = $state<MonitorState>({ processes: null, sockets: null, processError: null, socketError: null })
+let fatalError = $state<string | null>(null)
+let fatalErrorGeneration = $state(0)
+let processQuery = $state('')
+let portsQuery = $state('')
+let view = $state<PrimaryView>('processes')
+let portsFilter = $state<PortsFilter>('listeners')
+let processFilter = $state<ProcessFilter>('all')
 let protocol = $state<'all' | Protocol>('all')
 let connectionState = $state<'all' | SocketState>('all')
-let settings = $state<RefreshSettings>({
-  intervalMs: 2000,
-  paused: false,
-  includeUdp: true,
-  includeIpv6: true,
-})
+let processSort = $state<ProcessSort>('cpu')
+let sortDescending = $state(true)
+let portScope = $state<ProcessKey | null>(null)
+let settings = $state<RefreshSettings>({ intervalMs: 2000, paused: false, includeUdp: true, includeIpv6: true })
 let preview = $state(false)
 let refreshing = $state(false)
-let diagnosing = $state(false)
-let lsof = $state<LsofSample | null>(null)
+let nowMs = $state(Date.now())
+let unlisteners: UnlistenFn[] = []
+let clockTimer: ReturnType<typeof setInterval> | null = null
+let generationState = $state<SourceGenerationState>({ processSeen: -1, socketSeen: -1 })
+let cycleSeen = $state(-1)
 
-let unlistenSnapshot: UnlistenFn | null = null
-let unlistenError: UnlistenFn | null = null
+const listenPortSets = $derived.by(() => listenPortsByProcess(monitor.sockets?.sockets ?? []))
 
-const visible = $derived.by(() => {
-  const sockets = snapshot?.sockets ?? []
-  return sockets.filter((entry) => matches(entry, query, protocol, connectionState))
-})
-
-const counts = $derived.by(() => {
-  const sockets = snapshot?.sockets ?? []
-  let established = 0
-  let listen = 0
-  let udp = 0
-  for (const entry of sockets) {
-    if (entry.state === 'established') established += 1
-    if (entry.state === 'listen') listen += 1
-    if (entry.protocol === 'udp') udp += 1
+const contextPathsByProcess = $derived.by(() => {
+  const map = new Map<string, string>()
+  for (const entry of monitor.processes?.entries ?? []) {
+    const paths = [entry.cwd.path, entry.executable.path, entry.contextDisplay]
+      .filter(Boolean)
+      .join(' ')
+    map.set(processKeyId(entry.key), paths)
   }
-  return { total: sockets.length, established, listen, udp }
+  return map
 })
 
-function matches(
-  entry: SocketEntry,
-  needleText: string,
-  protocolFilter: 'all' | Protocol,
-  stateFilter: 'all' | SocketState,
-): boolean {
-  if (protocolFilter !== 'all' && entry.protocol !== protocolFilter) return false
-  if (stateFilter !== 'all' && entry.state !== stateFilter) return false
-  const needle = needleText.trim().toLowerCase()
-  if (!needle) return true
-  const haystack = [
-    entry.processName ?? '',
-    entry.pid?.toString() ?? '',
-    entry.protocol,
-    entry.localAddress,
-    String(entry.localPort),
-    entry.remoteAddress ?? '',
-    entry.remotePort?.toString() ?? '',
-    entry.state,
-    stateLabel(entry.state),
-  ]
-    .join(' ')
-    .toLowerCase()
-  return haystack.includes(needle)
-}
+const contextDisplayByProcess = $derived.by(() => {
+  const map = new Map<string, string>()
+  for (const entry of monitor.processes?.entries ?? []) {
+    map.set(processKeyId(entry.key), entry.contextDisplay ?? entry.cwd.path ?? '—')
+  }
+  return map
+})
+
+const visibleProcesses = $derived.by(() =>
+  filterProcesses(
+    monitor.processes?.entries ?? [],
+    processQuery,
+    listenPortSets,
+    processFilter,
+    processSort,
+    sortDescending,
+  ),
+)
+
+const processCounts = $derived.by(() => {
+  const entries = monitor.processes?.entries ?? []
+  return {
+    total: entries.length,
+    running: entries.filter((entry) => entry.status === 'running').length,
+    withListeners: monitor.sockets && !monitor.socketError
+      ? entries.filter((entry) => (listenPortSets.get(processKeyId(entry.key))?.size ?? 0) > 0).length
+      : null,
+  }
+})
+
+const portCounts = $derived.by(() => {
+  const sockets = monitor.sockets?.sockets ?? []
+  return { listeners: sockets.filter((entry) => listenerPortFilter(entry)).length, all: sockets.length }
+})
+
+const visiblePorts = $derived.by(() =>
+  filterPorts(
+    monitor.sockets?.sockets ?? [],
+    portsQuery,
+    contextPathsByProcess,
+    portsFilter,
+    protocol,
+    connectionState,
+    portScope,
+  ),
+)
+
+const processStale = $derived(isSnapshotStale(
+  monitor.processes?.capturedAt,
+  settings.intervalMs,
+  monitor.processError != null,
+  nowMs,
+))
+
+const socketStale = $derived(isSnapshotStale(
+  monitor.sockets?.capturedAt,
+  settings.intervalMs,
+  monitor.socketError != null,
+  nowMs,
+))
+
+const detailStale = $derived(isSnapshotStale(
+  inspectorState.detailCapturedAt ?? undefined,
+  settings.intervalMs,
+  inspectorState.detailError != null,
+  nowMs,
+))
 
 function errorText(cause: unknown): string {
-  if (cause instanceof Error) return cause.message
-  return String(cause)
+  return cause instanceof Error ? cause.message : String(cause)
+}
+
+function endpointsForKey(key: ProcessKey) {
+  return (monitor.sockets?.sockets ?? []).filter(
+    (entry) => entry.processKey && processKeyId(entry.processKey) === processKeyId(key),
+  )
+}
+
+function syncInspectorFromMonitor(snapshot?: ProcessSnapshot) {
+  const findProcess = (lookup: ProcessKey) =>
+    (snapshot ?? monitor.processes)?.entries.find(
+      (entry) => processKeyId(entry.key) === processKeyId(lookup),
+    )
+  inspectorState.syncLastGood(
+    findProcess,
+    endpointsForKey,
+    monitor.processes?.capturedAt ?? null,
+    monitor.sockets?.capturedAt ?? null,
+    monitor.socketError != null,
+    monitor.processError != null,
+  )
+}
+
+function acceptProcess(snapshot: ProcessSnapshot) {
+  const applied = applyProcessSnapshot(generationState, snapshot)
+  if (!applied.accepted) return
+  generationState = applied.state
+  monitor.processes = snapshot
+  monitor.processError = null
+  syncInspectorFromMonitor(snapshot)
+}
+
+function acceptSockets(snapshot: SocketSnapshot) {
+  const applied = applySocketSnapshot(generationState, snapshot)
+  if (!applied.accepted) return
+  generationState = applied.state
+  monitor.sockets = snapshot
+  monitor.socketError = null
+  syncInspectorFromMonitor()
 }
 
 async function commit(next: RefreshSettings) {
   const previous = settings
   settings = next
-  if (next.paused) status = 'paused'
-  else if (status === 'paused') status = snapshot ? 'live' : 'loading'
   if (preview) return
   try {
     settings = await updateSettings(next)
   } catch (cause) {
     settings = previous
-    error = errorText(cause)
-    status = 'error'
+    fatalError = errorText(cause)
   }
 }
 
 async function refreshNow() {
   if (preview) {
-    snapshot = fixtureSnapshot()
-    status = settings.paused ? 'paused' : 'live'
+    monitor = fixtureMonitorState()
+    nowMs = Date.now()
     return
   }
   refreshing = true
   try {
-    snapshot = await invokeRefreshNow()
-    error = null
-    status = settings.paused ? 'paused' : 'live'
+    await requestRefresh()
   } catch (cause) {
-    error = errorText(cause)
-    status = 'error'
-  } finally {
     refreshing = false
+    fatalError = errorText(cause)
   }
 }
 
-async function diagnose() {
-  if (preview) {
-    lsof = { lineCount: snapshot?.sockets.length ?? 0 }
-    return
-  }
-  diagnosing = true
-  try {
-    lsof = await diagnoseLsof()
-  } catch (cause) {
-    error = errorText(cause)
-    status = 'error'
-  } finally {
-    diagnosing = false
-  }
+function setView(next: PrimaryView) {
+  if (view === next) return
+  view = next
+  inspectorState.switchView(next)
+}
+
+function scopePorts(key: ProcessKey, port?: number) {
+  portScope = key
+  portsFilter = 'listeners'
+  if (port != null) portsQuery = String(port)
+  setView('ports')
+}
+
+function clearPortScope() {
+  portScope = null
+}
+
+function startClock() {
+  if (clockTimer) clearInterval(clockTimer)
+  clockTimer = setInterval(() => { nowMs = Date.now() }, 1000)
 }
 
 async function stop() {
-  unlistenSnapshot?.()
-  unlistenError?.()
-  unlistenSnapshot = null
-  unlistenError = null
+  if (clockTimer) clearInterval(clockTimer)
+  clockTimer = null
+  for (const unlisten of unlisteners) unlisten()
+  unlisteners = []
 }
 
 async function start() {
   await stop()
+  startClock()
   if (!isTauri()) {
     preview = true
-    snapshot = fixtureSnapshot()
-    status = 'live'
-    error = null
+    inspectorState.setPreview(true)
+    monitor = fixtureMonitorState()
+    fatalError = null
+    generationState = { processSeen: monitor.processes?.generation ?? 1, socketSeen: monitor.sockets?.generation ?? 1 }
+    cycleSeen = monitorCycleGeneration(monitor)
     return
   }
 
   preview = false
-  status = 'loading'
+  inspectorState.setPreview(false)
+  generationState = { processSeen: -1, socketSeen: -1 }
+  cycleSeen = -1
   try {
     settings = await getSettings()
-    unlistenSnapshot = await listen<SocketSnapshot>('snapshot', (event) => {
-      snapshot = event.payload
-      error = null
-      status = settings.paused ? 'paused' : 'live'
-    })
-    unlistenError = await listen<string>('snapshot-error', (event) => {
-      error = event.payload
-      status = 'error'
-    })
+    unlisteners.push(await listen<ProcessSnapshot>('process-snapshot', (event) => acceptProcess(event.payload)))
+    unlisteners.push(await listen<SocketSnapshot>('snapshot', (event) => acceptSockets(event.payload)))
+    unlisteners.push(await listen<SnapshotError>('process-error', (event) => {
+      const reduced = reduceProcessErrorEvent(generationState, event.payload)
+      generationState = reduced.state
+      if (reduced.message != null) monitor.processError = reduced.message
+    }))
+    unlisteners.push(await listen<SnapshotError>('snapshot-error', (event) => {
+      const reduced = reduceSocketErrorEvent(generationState, event.payload)
+      generationState = reduced.state
+      if (reduced.message != null) monitor.socketError = reduced.message
+    }))
+    unlisteners.push(await listen<number>('refresh-complete', (event) => {
+      const reduced = reduceRefreshComplete(cycleSeen, event.payload, Math.max(generationState.processSeen, generationState.socketSeen))
+      cycleSeen = reduced.cycleSeen
+      if (!reduced.accepted) return
+      refreshing = false
+      if (shouldClearFatalError(fatalErrorGeneration, event.payload)) {
+        fatalError = null
+      }
+      syncInspectorFromMonitor()
+      inspectorState.noteRefreshComplete(event.payload)
+    }))
+    unlisteners.push(await listen<RefreshFatal>('refresh-fatal', (event) => {
+      const reduced = reduceRefreshFatal(cycleSeen, event.payload, Math.max(generationState.processSeen, generationState.socketSeen))
+      cycleSeen = reduced.cycleSeen
+      if (!reduced.accepted) return
+      refreshing = false
+      fatalError = reduced.message
+      fatalErrorGeneration = event.payload.generation
+    }))
+    const initial = await getMonitorState()
+    const merged = applyBootstrapMonitorState(generationState, monitor, initial)
+    generationState = merged.state
+    monitor = { ...monitor, ...merged.monitor }
+    cycleSeen = Math.max(cycleSeen, monitorCycleGeneration(initial))
+    if (monitor.processes) syncInspectorFromMonitor(monitor.processes)
     await refreshNow()
   } catch (cause) {
-    error = errorText(cause)
-    status = 'error'
+    fatalError = errorText(cause)
   }
 }
 
 export const renderState = {
-  get snapshot() {
-    return snapshot
-  },
-  get visible() {
-    return visible
-  },
-  get status() {
-    return status
-  },
+  get processes() { return monitor.processes },
+  get sockets() { return monitor.sockets },
+  get socketError() { return monitor.socketError },
+  get processError() { return monitor.processError },
+  get view() { return view },
+  get portsFilter() { return portsFilter },
+  get processFilter() { return processFilter },
+  get protocol() { return protocol },
+  get connectionState() { return connectionState },
+  get portScope() { return portScope },
+  get processStale() { return processStale },
+  get socketStale() { return socketStale },
+  get detailStale() { return detailStale },
+  get nowMs() { return nowMs },
   get error() {
-    return error
+    return fatalError ?? (view === 'processes' ? monitor.processError : monitor.socketError)
   },
-  get query() {
-    return query
+  get status(): RenderStatus {
+    const stale = view === 'processes' ? processStale : socketStale
+    if (settings.paused) return stale ? 'stale' : 'paused'
+    if (this.error) return stale ? 'stale' : 'error'
+    if (stale) return 'stale'
+    if (refreshing) return 'live'
+    return view === 'processes'
+      ? (monitor.processes ? 'live' : 'loading')
+      : (monitor.sockets ? 'live' : 'loading')
   },
-  get protocol() {
-    return protocol
+  get query() { return view === 'ports' ? portsQuery : processQuery },
+  get processSort() { return processSort },
+  get sortDescending() { return sortDescending },
+  get settings() { return settings },
+  get processCounts() { return processCounts },
+  get portCounts() { return portCounts },
+  get visibleProcesses() { return visibleProcesses },
+  get visiblePorts() { return visiblePorts },
+  get listenPortSets() { return listenPortSets },
+  get matchingProcessCount() { return visibleProcesses.length },
+  listenPortsFor(key: ProcessKey) {
+    return [...(listenPortSets.get(processKeyId(key)) ?? [])].sort((a, b) => a - b)
   },
-  get connectionState() {
-    return connectionState
+  contextForProcess(key: ProcessKey) {
+    return contextDisplayByProcess.get(processKeyId(key)) ?? '—'
   },
-  get settings() {
-    return settings
+  findProcess(key: ProcessKey): ProcessEntry | undefined {
+    return monitor.processes?.entries.find((entry) => processKeyId(entry.key) === processKeyId(key))
   },
-  get counts() {
-    return counts
+  endpointsFor(key: ProcessKey) {
+    return endpointsForKey(key)
   },
-  get preview() {
-    return preview
-  },
-  get refreshing() {
-    return refreshing
-  },
-  get diagnosing() {
-    return diagnosing
-  },
-  get lsof() {
-    return lsof
-  },
+  get preview() { return preview },
+  get refreshing() { return refreshing },
   setQuery(value: string) {
-    query = value
+    if (view === 'ports') portsQuery = value
+    else processQuery = value
   },
-  setProtocol(value: 'all' | Protocol) {
-    protocol = value
+  clearQuery() {
+    if (view === 'ports') portsQuery = ''
+    else processQuery = ''
   },
-  setConnectionState(value: 'all' | SocketState) {
-    connectionState = value
+  setView,
+  setPortsFilter(value: PortsFilter) { portsFilter = value },
+  setProcessFilter(value: ProcessFilter) { processFilter = value },
+  setProtocol(value: 'all' | Protocol) { protocol = value },
+  setConnectionState(value: 'all' | SocketState) { connectionState = value },
+  setProcessSort(value: ProcessSort) {
+    if (processSort === value) sortDescending = !sortDescending
+    else { processSort = value; sortDescending = value !== 'pid' }
   },
-  setPaused(paused: boolean) {
-    return commit({ ...settings, paused })
-  },
-  setInterval(intervalMs: number) {
-    return commit({ ...settings, intervalMs })
-  },
-  setIncludeUdp(includeUdp: boolean) {
-    return commit({ ...settings, includeUdp })
-  },
-  setIncludeIpv6(includeIpv6: boolean) {
-    return commit({ ...settings, includeIpv6 })
-  },
+  scopePorts,
+  clearPortScope,
+  setPaused(paused: boolean) { return commit({ ...settings, paused }) },
+  setInterval(intervalMs: number) { return commit({ ...settings, intervalMs }) },
+  setIncludeUdp(includeUdp: boolean) { return commit({ ...settings, includeUdp }) },
+  setIncludeIpv6(includeIpv6: boolean) { return commit({ ...settings, includeIpv6 }) },
   refreshNow,
-  diagnose,
   start,
   stop,
 }

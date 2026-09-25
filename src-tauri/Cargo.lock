@@ -2785,10 +2785,11 @@ dependencies = [
 ]
 
 [[package]]
-name = "portscan"
+name = "portmaster"
 version = "0.1.0"
 dependencies = [
  "chrono",
+ "libc",
  "netstat2",
  "serde",
  "serde_json",

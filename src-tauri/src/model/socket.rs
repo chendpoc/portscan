@@ -1,5 +1,7 @@
 use serde::{Deserialize, Serialize};
 
+use super::process::ProcessKey;
+
 /// Socket record as returned by the OS, before a single owning PID is chosen.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct RawSocket {
@@ -23,6 +25,7 @@ pub struct PidAssociatedSocket {
 #[serde(rename_all = "camelCase")]
 pub struct SocketEntry {
     pub pid: Option<u32>,
+    pub process_key: Option<ProcessKey>,
     pub process_name: Option<String>,
     pub protocol: Protocol,
     pub state: SocketState,

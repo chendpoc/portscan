@@ -3,16 +3,16 @@ use tauri::State;
 use crate::app_state::AppState;
 use crate::diagnostics::lsof::{self, LsofSample};
 use crate::error::AppError;
-use crate::model::SocketSnapshot;
+use crate::model::MonitorState;
 
 #[tauri::command]
-pub fn get_snapshot(state: State<'_, AppState>) -> Result<SocketSnapshot, AppError> {
-    state.snapshot()
+pub fn get_monitor_state(state: State<'_, AppState>) -> Result<MonitorState, AppError> {
+    state.monitor_state()
 }
 
 #[tauri::command]
-pub fn refresh_now(state: State<'_, AppState>) -> Result<SocketSnapshot, AppError> {
-    state.refresh_blocking()
+pub fn request_refresh(state: State<'_, AppState>) {
+    state.request_refresh();
 }
 
 #[tauri::command]

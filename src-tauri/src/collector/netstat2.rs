@@ -66,19 +66,6 @@ fn raw_from_info(info: netstat2::SocketInfo) -> RawSocket {
     }
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn collects_local_sockets() {
-        let sockets = Netstat2Collector::default()
-            .collect()
-            .expect("netstat2 should read sockets on this machine");
-        let _ = sockets;
-    }
-}
-
 fn map_tcp_state(state: TcpState) -> SocketState {
     match state {
         TcpState::Closed => SocketState::Closed,
@@ -94,5 +81,18 @@ fn map_tcp_state(state: TcpState) -> SocketState {
         TcpState::TimeWait => SocketState::TimeWait,
         TcpState::DeleteTcb => SocketState::DeleteTcb,
         TcpState::Unknown => SocketState::Unknown,
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn collects_local_sockets() {
+        let sockets = Netstat2Collector::default()
+            .collect()
+            .expect("netstat2 should read sockets on this machine");
+        let _ = sockets;
     }
 }

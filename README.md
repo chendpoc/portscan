@@ -1,4 +1,4 @@
-# Portscan
+# PortMaster
 
 查看这台 Mac 上已经打开的套接字。采集走本机接口，不会去连别的主机。
 

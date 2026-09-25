@@ -1,23 +1,22 @@
 use std::collections::HashMap;
 
-use crate::model::{PidAssociatedSocket, ProcessInfo, Protocol, SocketEntry, SocketState};
+use crate::model::{PidAssociatedSocket, ProcessEntry, Protocol, SocketEntry, SocketState};
 
 pub fn normalize(
     associated: Vec<PidAssociatedSocket>,
-    processes: &HashMap<u32, ProcessInfo>,
+    processes: &HashMap<u32, ProcessEntry>,
 ) -> Vec<SocketEntry> {
     associated
         .into_iter()
         .map(|item| {
-            let process_name = item.pid.and_then(|pid| {
-                processes
-                    .get(&pid)
-                    .map(|process| process.name.clone())
-                    .filter(|name| !name.is_empty())
-            });
+            let process = item.pid.and_then(|pid| processes.get(&pid));
+            let process_name = process
+                .map(|process| process.name.clone())
+                .filter(|name| !name.is_empty());
             let (remote_address, remote_port) = remote_endpoint(&item.socket);
             SocketEntry {
                 pid: item.pid,
+                process_key: process.map(|process| process.key),
                 process_name,
                 protocol: item.socket.protocol,
                 state: item.socket.state,

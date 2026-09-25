@@ -5,6 +5,8 @@ use thiserror::Error;
 pub enum CollectorError {
     #[error("读取本机套接字失败: {0}")]
     Netstat(String),
+    #[error("读取本机进程失败: {0}")]
+    Process(String),
 }
 
 #[derive(Debug, Error)]

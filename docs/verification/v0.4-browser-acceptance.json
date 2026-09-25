@@ -1,0 +1,54 @@
+[
+  {
+    "name": "async detail rerenders while paused",
+    "passed": true
+  },
+  {
+    "name": "independent source failure and valid empty endpoints",
+    "passed": true
+  },
+  {
+    "name": "exited selection remains and copy enabled",
+    "passed": true
+  },
+  {
+    "name": "per-view selection persistence",
+    "passed": true
+  },
+  {
+    "name": "late detail reply cannot replace latest selection",
+    "passed": true
+  },
+  {
+    "name": "1000 rows scroll persistence and search",
+    "passed": true
+  },
+  {
+    "name": "failed detail waits for next completed cycle",
+    "passed": true
+  },
+  {
+    "name": "duplicate and old completions do not schedule detail",
+    "passed": true
+  },
+  {
+    "name": "port chip preserves source selection on roundtrip",
+    "passed": true
+  },
+  {
+    "name": "copy preserves historical source timestamps and arguments",
+    "passed": true
+  },
+  {
+    "name": "older fatal and completion cannot clear newer fatal",
+    "passed": true
+  },
+  {
+    "name": "inactive selected view retains latest historical facts and detail",
+    "passed": true
+  },
+  {
+    "name": "completion older than accepted source cannot refresh detail",
+    "passed": true
+  }
+]
