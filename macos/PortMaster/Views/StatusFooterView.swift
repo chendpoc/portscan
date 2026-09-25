@@ -1,58 +1,98 @@
 import SwiftUI
 
+/// 状态栏：全局采样状态 + 计数 + 时钟 + 设置。
 struct StatusFooterView: View {
     @Bindable var model: MonitorViewModel
 
     var body: some View {
-        HStack {
-            Text(summary)
-                .font(.caption)
-                .foregroundStyle(.secondary)
+        HStack(spacing: 8) {
+            StatusDot(kind: dotKind)
+            Text(statusText)
+                .font(.system(size: 11))
+                .foregroundStyle(Theme.text2)
             Spacer()
+            Text(countText)
+                .font(.system(size: 11))
+                .foregroundStyle(Theme.text2)
+                .monospacedDigit()
+            Text(Format.time(model.now))
+                .font(.system(size: 11))
+                .foregroundStyle(Theme.text2)
+                .monospacedDigit()
             Menu {
-                Picker("Interval", selection: Binding(
+                Picker("采样间隔", selection: Binding(
                     get: { model.settings.intervalMs },
-                    set: { model.updateSettings(RefreshSettings(intervalMs: $0, paused: model.settings.paused, includeUdp: model.settings.includeUdp, includeIpv6: model.settings.includeIpv6)) },
+                    set: { value in
+                        var settings = model.settings
+                        settings.intervalMs = value
+                        model.updateSettings(settings)
+                    },
                 )) {
-                    Text("1 sec").tag(UInt64(1000))
-                    Text("2 sec").tag(UInt64(2000))
-                    Text("5 sec").tag(UInt64(5000))
+                    Text("1 秒").tag(UInt64(1000))
+                    Text("2 秒").tag(UInt64(2000))
+                    Text("5 秒").tag(UInt64(5000))
                 }
-                Toggle("Include UDP", isOn: Binding(
+                Toggle("包含 UDP", isOn: Binding(
                     get: { model.settings.includeUdp },
-                    set: { model.updateSettings(RefreshSettings(intervalMs: model.settings.intervalMs, paused: model.settings.paused, includeUdp: $0, includeIpv6: model.settings.includeIpv6)) },
+                    set: { value in
+                        var settings = model.settings
+                        settings.includeUdp = value
+                        model.updateSettings(settings)
+                    },
                 ))
-                Toggle("Include IPv6", isOn: Binding(
+                Toggle("包含 IPv6", isOn: Binding(
                     get: { model.settings.includeIpv6 },
-                    set: { model.updateSettings(RefreshSettings(intervalMs: model.settings.intervalMs, paused: model.settings.paused, includeUdp: model.settings.includeUdp, includeIpv6: $0)) },
+                    set: { value in
+                        var settings = model.settings
+                        settings.includeIpv6 = value
+                        model.updateSettings(settings)
+                    },
                 ))
-                Toggle("Pause", isOn: Binding(
-                    get: { model.settings.paused },
-                    set: { model.updateSettings(RefreshSettings(intervalMs: model.settings.intervalMs, paused: $0, includeUdp: model.settings.includeUdp, includeIpv6: model.settings.includeIpv6)) },
-                ))
-                if model.view == .ports {
-                    Picker("Ports filter", selection: $model.portsFilter) {
-                        Text("Listeners").tag(PortsFilter.listeners)
-                        Text("All sockets").tag(PortsFilter.all)
+                if model.page == .ports {
+                    Picker("端口筛选", selection: $model.portsFilter) {
+                        Text("仅监听").tag(PortsFilter.listeners)
+                        Text("全部套接字").tag(PortsFilter.all)
                     }
                 }
             } label: {
-                Label("Settings", systemImage: "slider.horizontal.3")
+                Image(systemName: "slider.horizontal.3")
+                    .font(.system(size: 11))
+                    .foregroundStyle(Theme.text2)
             }
             .menuStyle(.borderlessButton)
+            .frame(width: 24)
         }
-        .padding(.horizontal, 10)
-        .frame(height: 28)
-        .background(Color(nsColor: .windowBackgroundColor))
-        .overlay(alignment: .top) { Divider() }
+        .padding(.horizontal, 12)
+        .frame(height: 26)
+        .background(Theme.sidebar)
+        .overlay(alignment: .top) { Theme.sep.frame(height: 1) }
     }
 
-    private var summary: String {
-        let status = model.status
-        let interval = model.settings.intervalMs / 1000
-        if model.view == .processes {
-            return "\(model.visibleProcesses.count) processes · \(status) · \(interval)s"
+    private var dotKind: StatusKind {
+        switch model.status {
+        case .live: .ok
+        case .paused, .loading: .warn
+        case .error: .err
+        case .stale: .warn
         }
-        return "\(model.visiblePorts.count) ports · \(status) · \(interval)s"
+    }
+
+    private var statusText: String {
+        let interval = model.settings.intervalMs / 1000
+        switch model.status {
+        case .loading: return "正在采集首个样本…"
+        case .live: return "实时 · 每 \(interval) 秒采样"
+        case .paused: return "已暂停 — 采样停止，已有图表与表格保留；恢复后不回填缺口"
+        case .error: return "采集失败 — 保留上一份成功数据"
+        case .stale: return "数据过期 — 最新采样超过新鲜度阈值"
+        }
+    }
+
+    private var countText: String {
+        switch model.page {
+        case .processes: "\(model.visibleProcesses.count) 个进程"
+        case .ports: "\(model.visiblePorts.count) 个端口"
+        case .performance: "\(model.monitor.processes?.entries.count ?? 0) 个进程"
+        }
     }
 }

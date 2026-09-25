@@ -8,7 +8,8 @@ struct PortMasterApp: App {
         WindowGroup {
             ContentView(model: model)
         }
-        .defaultSize(width: 760, height: 520)
+        .windowStyle(.hiddenTitleBar)
+        .defaultSize(width: 1100, height: 720)
         .commands {
             CommandGroup(replacing: .newItem) {}
         }

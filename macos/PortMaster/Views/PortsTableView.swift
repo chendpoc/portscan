@@ -1,38 +1,127 @@
 import SwiftUI
 
+/// Ports 页：搜索 + 表格（端口 / 协议 / 状态 / 本地地址 / 所属进程 / PID）。
 struct PortsTableView: View {
     @Bindable var model: MonitorViewModel
 
+    private let portWidth: CGFloat = 64
+    private let protoWidth: CGFloat = 52
+    private let stateWidth: CGFloat = 96
+    private let addrWidth: CGFloat = 140
+    private let pidWidth: CGFloat = 64
+
     var body: some View {
-        Table(model.visiblePorts) {
-            TableColumn("Process") { entry in
-                Button {
-                    model.selectPort(entry)
-                } label: {
-                    Text(entry.processName ?? "—")
+        VStack(spacing: 0) {
+            PageHeadView(
+                title: "Ports",
+                count: "\(model.visiblePorts.count) 个监听端口",
+                placeholder: "搜索端口、进程或地址",
+                query: $model.query,
+                extra: { EmptyView() },
+            )
+            if model.visiblePorts.isEmpty {
+                EmptyStateView(
+                    title: "没有匹配的端口",
+                    hint: "尝试更换关键词。可搜索端口号、进程名称或本地地址。",
+                )
+            } else {
+                ScrollView {
+                    LazyVStack(spacing: 0, pinnedViews: [.sectionHeaders]) {
+                        Section(header: headerRow) {
+                            ForEach(model.visiblePorts) { entry in
+                                PortRow(
+                                    entry: entry,
+                                    portWidth: portWidth,
+                                    protoWidth: protoWidth,
+                                    stateWidth: stateWidth,
+                                    addrWidth: addrWidth,
+                                    pidWidth: pidWidth,
+                                    onSelect: { model.selectPort(entry) },
+                                )
+                            }
+                        }
+                    }
                 }
-                .buttonStyle(.plain)
             }
-            TableColumn("PID") { entry in
-                Text(entry.pid.map(String.init) ?? "—")
-                    .font(.system(.body, design: .monospaced))
-            }
-            TableColumn("Local") { entry in
-                Text("\(entry.localAddress):\(entry.localPort)")
-                    .font(.system(.caption, design: .monospaced))
-            }
-            TableColumn("Proto") { entry in
-                Text(entry.protocolKind.rawValue.uppercased())
-            }
-            TableColumn("State") { entry in
-                Text(portStateLabel(entry))
-            }
+            TableFootNote(items: [model.portsFilter == .listeners
+                ? "仅展示监听（LISTEN）状态的本地端口 · 完全相同的绑定合并显示"
+                : "展示全部套接字（含已建立连接） · 完全相同的绑定合并显示"])
         }
-        .onTapGesture(count: 1) { }
     }
 
-    private func portStateLabel(_ entry: SocketEntry) -> String {
-        if entry.protocolKind == .udp, entry.state == .none { return "UDP BOUND" }
-        return "\(entry.protocolKind.rawValue.uppercased()) \(entry.state.rawValue)"
+    private var headerRow: some View {
+        HStack(spacing: 0) {
+            HeaderCell(title: "端口").frame(width: portWidth, alignment: .leading)
+            HeaderCell(title: "协议").frame(width: protoWidth, alignment: .leading)
+            HeaderCell(title: "状态").frame(width: stateWidth, alignment: .leading)
+            HeaderCell(title: "本地地址").frame(width: addrWidth, alignment: .leading)
+            HeaderCell(title: "所属进程").frame(maxWidth: .infinity, alignment: .leading)
+            HeaderCell(title: "PID").frame(width: pidWidth, alignment: .leading)
+        }
+        .padding(.horizontal, 12)
+        .padding(.vertical, 7)
+        .background(Theme.raised)
+        .overlay(alignment: .bottom) { Theme.sepStrong.frame(height: 1) }
+    }
+}
+
+private struct PortRow: View {
+    let entry: SocketEntry
+    let portWidth: CGFloat
+    let protoWidth: CGFloat
+    let stateWidth: CGFloat
+    let addrWidth: CGFloat
+    let pidWidth: CGFloat
+    let onSelect: () -> Void
+
+    @State private var hovering = false
+
+    var body: some View {
+        HStack(spacing: 0) {
+            Text(verbatim: "\(entry.localPort)")
+                .font(.system(size: 12.5, weight: .semibold))
+                .monospacedDigit()
+                .lineLimit(1)
+                .frame(width: portWidth, alignment: .leading)
+            Text(entry.protocolKind.rawValue.uppercased())
+                .lineLimit(1)
+                .frame(width: protoWidth, alignment: .leading)
+            stateBadge
+                .frame(width: stateWidth, alignment: .leading)
+            Text(entry.localAddress)
+                .monospacedDigit()
+                .lineLimit(1)
+                .truncationMode(.middle)
+                .help(entry.localAddress)
+                .frame(width: addrWidth, alignment: .leading)
+            Text(entry.processName ?? "—")
+                .lineLimit(1)
+                .truncationMode(.tail)
+                .frame(maxWidth: .infinity, alignment: .leading)
+            Text(entry.pid.map(String.init) ?? "—")
+                .monospacedDigit()
+                .lineLimit(1)
+                .frame(width: pidWidth, alignment: .leading)
+        }
+        .font(.system(size: 12.5))
+        .padding(.horizontal, 12)
+        .padding(.vertical, 6)
+        .background(RowBackground(selected: false, hovering: hovering))
+        .overlay(alignment: .bottom) { Theme.sep.frame(height: 1) }
+        .contentShape(Rectangle())
+        .onTapGesture(perform: onSelect)
+        .onHover { hovering = $0 }
+        .animation(.easeOut(duration: 0.12), value: hovering)
+    }
+
+    @ViewBuilder
+    private var stateBadge: some View {
+        if entry.protocolKind == .tcp, entry.state == .listen {
+            StatusBadge(kind: .ok, label: "LISTEN")
+        } else if entry.protocolKind == .udp, entry.state == .none {
+            StatusBadge(kind: .mut, label: "UDP")
+        } else {
+            StatusBadge(kind: .mut, label: entry.state.rawValue.uppercased())
+        }
     }
 }
