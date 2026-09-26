@@ -1,0 +1,98 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Resolve version
+        id: version
+        run: |
+          tag="${GITHUB_REF_NAME#v}"
+          if ! [[ "$tag" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Tag must look like v0.1.0, got ${GITHUB_REF_NAME}"
+            exit 1
+          fi
+          marketing=$(python3 - <<'PY'
+          import re
+          text = open("macos/PortMaster.xcodeproj/project.pbxproj").read()
+          versions = set(re.findall(r"MARKETING_VERSION = ([0-9.]+);", text))
+          if len(versions) != 1:
+              raise SystemExit(f"expected one MARKETING_VERSION, found {sorted(versions)}")
+          print(next(iter(versions)))
+          PY
+          )
+          if [ "$tag" != "$marketing" ]; then
+            echo "Tag v${tag} does not match MARKETING_VERSION ${marketing}"
+            exit 1
+          fi
+          echo "version=${tag}" >> "$GITHUB_OUTPUT"
+          echo "Releasing PortMaster ${tag}"
+
+      - name: Test
+        run: |
+          xcodebuild \
+            -project macos/PortMaster.xcodeproj \
+            -scheme PortMaster \
+            -configuration Debug \
+            -destination 'platform=macOS' \
+            -derivedDataPath build \
+            CODE_SIGN_IDENTITY="-" \
+            CODE_SIGN_STYLE=Manual \
+            DEVELOPMENT_TEAM="" \
+            test
+
+      - name: Build
+        run: |
+          xcodebuild \
+            -project macos/PortMaster.xcodeproj \
+            -scheme PortMaster \
+            -configuration Release \
+            -destination 'generic/platform=macOS' \
+            -derivedDataPath build \
+            MARKETING_VERSION="${{ steps.version.outputs.version }}" \
+            CURRENT_PROJECT_VERSION=1 \
+            CODE_SIGN_IDENTITY="-" \
+            CODE_SIGN_STYLE=Manual \
+            DEVELOPMENT_TEAM="" \
+            build
+
+      - name: Package
+        run: |
+          version="${{ steps.version.outputs.version }}"
+          app="build/Build/Products/Release/PortMaster.app"
+          test -d "$app"
+          short=$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$app/Contents/Info.plist")
+          if [ "$short" != "$version" ]; then
+            echo "Built app version ${short} does not match ${version}"
+            exit 1
+          fi
+          ditto -c -k --keepParent "$app" "PortMaster-${version}-macOS.zip"
+
+      - name: Publish GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          version="${{ steps.version.outputs.version }}"
+          gh release create "$GITHUB_REF_NAME" \
+            "PortMaster-${version}-macOS.zip" \
+            --title "PortMaster ${version}" \
+            --notes "$(cat <<EOF
+          PortMaster ${version}，适用于 macOS 14 及以上。
+
+          下载 \`PortMaster-${version}-macOS.zip\`，解压后把 PortMaster.app 拖到「应用程序」。应用使用临时签名，未经过 Apple 公证。若系统提示无法打开，在终端执行：
+
+          \`\`\`bash
+          xattr -dr com.apple.quarantine /Applications/PortMaster.app
+          \`\`\`
+          EOF
+          )"
