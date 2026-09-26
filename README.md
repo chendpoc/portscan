@@ -4,6 +4,8 @@
 
 进程与套接字分开刷新；某一侧失败时保留上一份成功数据并标记为过期。界面为 SwiftUI macOS 应用（不启用 App Sandbox，以便读取其他进程信息）。
 
+官网：https://chendpoc.github.io/portscan/ （源码在 `website/`，VitePress，推送到 main 后自动部署到 GitHub Pages）
+
 ## 开发
 
 在 Xcode 中打开 `macos/PortMaster.xcodeproj`，选择 **PortMaster** scheme 运行。

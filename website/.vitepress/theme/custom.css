@@ -1,0 +1,371 @@
+/* ===== PortMaster 官网自定义样式 ===== */
+
+:root {
+  --pm-accent: #3e63dd;
+  --pm-accent-soft: rgba(62, 99, 221, 0.12);
+  --pm-warm: #d97706;
+}
+
+/* ---------- Hero 区 ---------- */
+
+.VPHero {
+  position: relative;
+  overflow: hidden;
+}
+
+/* 产品截图：默认左右分栏会把图压成侧边小窗，改为标题在上、大图在下 */
+@media (min-width: 960px) {
+  .VPHero.has-image .container {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    max-width: 1180px;
+  }
+
+  .VPHero.has-image .main {
+    max-width: 680px;
+  }
+
+  .VPHero.has-image .name,
+  .VPHero.has-image .text,
+  .VPHero.has-image .tagline {
+    margin-inline: auto;
+  }
+
+  .VPHero.has-image .actions {
+    justify-content: center;
+  }
+
+  .VPHero.has-image .image {
+    order: 3;
+    width: min(1080px, 94vw);
+    margin-top: 36px;
+    flex: none;
+  }
+
+  .VPHero.has-image .image-container {
+    width: 100%;
+    max-width: none;
+    height: auto;
+    min-height: 0;
+    transform: none;
+    display: block;
+  }
+
+  /* 默认主题用圆形光晕 + 192–320px 方框；产品截图改为全宽展示 */
+  .VPHero.has-image .image-bg {
+    display: none;
+  }
+
+  .VPHero.has-image .image-src {
+    position: relative;
+    top: auto;
+    left: auto;
+    transform: none;
+    width: 100%;
+    max-width: none;
+    max-height: none;
+    height: auto;
+    object-fit: contain;
+  }
+}
+
+@media (max-width: 959px) {
+  .VPHero.has-image .image {
+    width: min(100%, 520px);
+    margin-inline: auto;
+  }
+
+  .VPHero.has-image .image-container {
+    width: 100%;
+    height: auto;
+    transform: none;
+  }
+
+  .VPHero.has-image .image-bg {
+    display: none;
+  }
+
+  .VPHero.has-image .image-src {
+    position: relative;
+    top: auto;
+    left: auto;
+    transform: none;
+    width: 100%;
+    max-width: none;
+    height: auto;
+  }
+}
+
+/* 背景缓缓漂移的彩色光斑 */
+.VPHero::before {
+  content: '';
+  position: absolute;
+  inset: -20%;
+  background:
+    radial-gradient(38% 42% at 22% 28%, rgba(62, 99, 221, 0.16), transparent 70%),
+    radial-gradient(34% 38% at 78% 22%, rgba(217, 119, 6, 0.10), transparent 70%),
+    radial-gradient(40% 44% at 60% 82%, rgba(62, 99, 221, 0.10), transparent 70%);
+  animation: pm-drift 18s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+
+@keyframes pm-drift {
+  from { transform: translate3d(-2%, -1%, 0) scale(1); }
+  to   { transform: translate3d(2%, 2%, 0) scale(1.06); }
+}
+
+/* 标题渐变文字流光 */
+.VPHero .name,
+.VPHero .text {
+  background: linear-gradient(100deg, var(--vp-c-text-1) 20%, var(--pm-accent) 42%, var(--pm-warm) 55%, var(--vp-c-text-1) 75%);
+  background-size: 220% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: pm-shine 7s linear infinite;
+}
+
+@keyframes pm-shine {
+  from { background-position: 120% 0; }
+  to   { background-position: -120% 0; }
+}
+
+/* Hero GIF 浮动 + 入场 */
+.VPHero .image-container {
+  perspective: 900px;
+}
+
+.VPHero .image-src {
+  border-radius: 14px;
+  box-shadow:
+    0 2px 6px rgba(15, 23, 42, 0.08),
+    0 24px 60px -12px rgba(15, 23, 42, 0.28);
+  animation:
+    pm-hero-in 0.9s cubic-bezier(0.22, 1, 0.36, 1) both,
+    pm-float 7s ease-in-out 1s infinite;
+  will-change: transform;
+}
+
+@keyframes pm-hero-in {
+  from { opacity: 0; transform: translateY(36px) rotateX(8deg) scale(0.96); }
+  to   { opacity: 1; transform: translateY(0) rotateX(0) scale(1); }
+}
+
+@keyframes pm-float {
+  0%, 100% { transform: translateY(0) rotateX(0deg); }
+  50%      { transform: translateY(-10px) rotateX(1.2deg); }
+}
+
+/* 文案入场 */
+.VPHero .name,
+.VPHero .text,
+.VPHero .tagline,
+.VPHero .actions {
+  animation: pm-rise 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.VPHero .text    { animation-delay: 0.08s; }
+.VPHero .tagline { animation-delay: 0.16s; }
+.VPHero .actions { animation-delay: 0.24s; }
+
+@keyframes pm-rise {
+  from { opacity: 0; transform: translateY(22px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ---------- Features 卡片 ---------- */
+
+.VPFeatures .VPFeature {
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease, border-color 0.35s ease;
+}
+
+.VPFeatures .VPFeature:hover {
+  transform: translateY(-5px);
+  border-color: var(--pm-accent);
+  box-shadow: 0 14px 34px -14px rgba(62, 99, 221, 0.35);
+}
+
+.VPFeatures .VPFeature .icon {
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.VPFeatures .VPFeature:hover .icon {
+  transform: scale(1.12) rotate(-4deg);
+}
+
+/* ---------- 首页自定义区块 ---------- */
+
+.pm-section {
+  max-width: 1152px;
+  margin: 0 auto;
+  padding: 56px 24px 8px;
+}
+
+.pm-section-title {
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin-bottom: 8px;
+  color: var(--vp-c-text-1);
+}
+
+.pm-section-sub {
+  color: var(--vp-c-text-2);
+  margin-bottom: 28px;
+  max-width: 640px;
+  line-height: 1.7;
+}
+
+/* 滚动进入视口时的上浮揭示；不支持 animation-timeline 的浏览器退化为加载即播 */
+.pm-reveal {
+  animation: pm-reveal-up 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@supports (animation-timeline: view()) {
+  .pm-reveal {
+    animation-timeline: view();
+    animation-range: entry 5% entry 45%;
+  }
+}
+
+@keyframes pm-reveal-up {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ---------- 三步排查 ---------- */
+
+.pm-steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 18px;
+  margin: 24px 0 8px;
+}
+
+.pm-step {
+  position: relative;
+  padding: 22px 20px 20px;
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 14px;
+  background: var(--vp-c-bg-soft);
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease;
+}
+
+.pm-step:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px -14px rgba(15, 23, 42, 0.25);
+}
+
+.pm-step-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--pm-accent);
+  color: #fff;
+  font-weight: 700;
+  font-size: 14px;
+  margin-bottom: 12px;
+}
+
+.pm-step h3 {
+  margin: 0 0 6px;
+  font-size: 17px;
+  border: none;
+  padding: 0;
+}
+
+.pm-step p {
+  margin: 0;
+  color: var(--vp-c-text-2);
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.pm-step code {
+  font-size: 12.5px;
+}
+
+/* ---------- GIF 展示窗 ---------- */
+
+.pm-shot {
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid var(--vp-c-divider);
+  box-shadow: 0 18px 48px -18px rgba(15, 23, 42, 0.3);
+  background: var(--vp-c-bg-soft);
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.4s ease;
+}
+
+.pm-shot:hover {
+  transform: translateY(-4px) scale(1.005);
+  box-shadow: 0 26px 60px -18px rgba(15, 23, 42, 0.38);
+}
+
+.pm-shot img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.pm-shot-caption {
+  padding: 10px 16px;
+  font-size: 13px;
+  color: var(--vp-c-text-2);
+  border-top: 1px solid var(--vp-c-divider);
+}
+
+.pm-shot-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 24px;
+}
+
+/* ---------- 原则清单 ---------- */
+
+.pm-principles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.pm-principle {
+  padding: 18px;
+  border-radius: 12px;
+  background: var(--vp-c-bg-soft);
+  border: 1px solid var(--vp-c-divider);
+}
+
+.pm-principle strong {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--vp-c-text-1);
+}
+
+.pm-principle span {
+  font-size: 13.5px;
+  color: var(--vp-c-text-2);
+  line-height: 1.65;
+}
+
+/* ---------- 尊重减少动效偏好 ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .VPHero::before,
+  .VPHero .image-src,
+  .VPHero .name,
+  .VPHero .text,
+  .VPHero .tagline,
+  .VPHero .actions,
+  .pm-reveal {
+    animation: none !important;
+  }
+  .VPFeatures .VPFeature,
+  .pm-step,
+  .pm-shot {
+    transition: none;
+  }
+}
