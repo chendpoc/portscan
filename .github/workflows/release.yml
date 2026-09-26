@@ -77,23 +77,38 @@ jobs:
             echo "Built app version ${short} does not match ${version}"
             exit 1
           fi
-          ditto -c -k --keepParent "$app" "PortMaster-${version}-macOS.zip"
+          staging="$(mktemp -d)"
+          ditto "$app" "$staging/PortMaster.app"
+          ln -s /Applications "$staging/Applications"
+          hdiutil create \
+            -volname "PortMaster ${version}" \
+            -srcfolder "$staging" \
+            -ov \
+            -format UDZO \
+            "PortMaster-${version}-macOS.dmg"
+          rm -rf "$staging"
+          test -s "PortMaster-${version}-macOS.dmg"
 
       - name: Publish GitHub Release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           version="${{ steps.version.outputs.version }}"
-          gh release create "$GITHUB_REF_NAME" \
-            "PortMaster-${version}-macOS.zip" \
-            --title "PortMaster ${version}" \
-            --notes "$(cat <<EOF
+          asset="PortMaster-${version}-macOS.dmg"
+          notes="$(cat <<EOF
           PortMaster ${version}，适用于 macOS 14 及以上。
 
-          下载 \`PortMaster-${version}-macOS.zip\`，解压后把 PortMaster.app 拖到「应用程序」。应用使用临时签名，未经过 Apple 公证。若系统提示无法打开，在终端执行：
+          下载并打开 \`PortMaster-${version}-macOS.dmg\`，把 PortMaster.app 拖到「应用程序」。应用使用临时签名，未经过 Apple 公证。若系统提示无法打开，在终端执行：
 
           \`\`\`bash
           xattr -dr com.apple.quarantine /Applications/PortMaster.app
           \`\`\`
           EOF
           )"
+          if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
+            gh release delete "$GITHUB_REF_NAME" --yes
+          fi
+          gh release create "$GITHUB_REF_NAME" \
+            "$asset" \
+            --title "PortMaster ${version}" \
+            --notes "$notes"
