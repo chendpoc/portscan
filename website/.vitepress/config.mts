@@ -6,12 +6,12 @@ export default defineConfig({
   title: 'PortMaster',
   description: 'macOS 上的 Windows 任务管理器：进程、CPU、内存与端口占用，一个窗口看清。',
   head: [
-    ['link', { rel: 'icon', type: 'image/svg+xml', href: '/portscan/logo.svg' }],
+    ['link', { rel: 'icon', type: 'image/png', href: '/portscan/logo.png' }],
     ['meta', { property: 'og:title', content: 'PortMaster — macOS 上的 Windows 任务管理器' }],
     ['meta', { property: 'og:description', content: '进程、CPU、内存与端口占用，一个窗口看清。纯本地、只读、不联网。' }],
   ],
   themeConfig: {
-    logo: '/logo.svg',
+    logo: '/logo.png',
     nav: [
       { text: '首页', link: '/' },
       { text: '使用指南', link: '/guide' },
