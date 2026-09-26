@@ -177,11 +177,12 @@ struct InspectorPanelView: View {
                             )
                         }
                         if !rssPoints.isEmpty {
+                            let rssYMax = MonitorLogic.trendChartYMax(values: rssPoints.map(\.v))
                             trendChart(
                                 title: "内存 RSS",
                                 points: rssPoints,
                                 color: Theme.mem,
-                                yMax: max(1, (record.samples.compactMap(\.rss).max().map(Double.init) ?? 1) * 1.2),
+                                yMax: rssYMax,
                                 yLabel: { Format.bytes(UInt64(max(0, $0))) },
                                 format: { Format.bytes(UInt64(max(0, $0))) },
                                 t0: record.t0,
@@ -248,8 +249,8 @@ struct InspectorPanelView: View {
             }
             MetricChartView(
                 // 迷你趋势图用纯折线：52px 高度下填充会糊成色块，描边更清晰
-                series: [ChartSeries(color: color, points: points, fill: false, width: 2, format: format)],
-                window: t0...max(t0, model.now),
+                series: [ChartSeries(color: color, points: points.map { Optional($0) }, fill: false, width: 2, format: format)],
+                window: t0...Swift.max(t0, model.now),
                 yMin: 0,
                 yMax: yMax,
                 yLabel: yLabel,

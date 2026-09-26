@@ -120,6 +120,13 @@ enum MonitorLogic {
         !snapshotLoaded && error == nil
     }
 
+    /// Inspector 迷你趋势图 Y 轴上限（字节或百分比等同一量纲的 v 值）。
+    /// 必须用 Swift.max：在 ViewBuilder 里写 `max(1, …)` 会与 `.max()` 链式调用歧义，曾把 RSS 的 yMax 算成 1。
+    static func trendChartYMax(values: [Double], headroom: Double = 1.2) -> Double {
+        let peak = values.max() ?? 0
+        return Swift.max(1, peak * headroom)
+    }
+
     /// 稳定量程：取 nice(峰值×1.15)，仅当新量程超出当前或收缩到 45% 以下时调整，
     /// 避免吞吐图纵轴频繁跳动。
     static func stableScale(current: Double?, maxValue: Double) -> Double {

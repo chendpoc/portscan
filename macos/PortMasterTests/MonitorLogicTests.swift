@@ -153,4 +153,11 @@ final class MonitorLogicTests: XCTestCase {
         XCTAssertEqual(result.count, 4)
         XCTAssertEqual(Set(result.map(\.id)).count, 4)
     }
+
+    func testTrendChartYMaxForRSSBytes() {
+        let peak = 100 * 1024 * 1024
+        let yMax = MonitorLogic.trendChartYMax(values: [Double(peak)])
+        XCTAssertEqual(yMax, Double(peak) * 1.2, accuracy: 1)
+        XCTAssertGreaterThan(yMax, 1_000_000)
+    }
 }
